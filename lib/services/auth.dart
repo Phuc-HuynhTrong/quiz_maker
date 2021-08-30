@@ -21,6 +21,7 @@ class AuthService {
     try {
       await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
+      return "sign up";
     } catch (e) {
       print(e);
     }

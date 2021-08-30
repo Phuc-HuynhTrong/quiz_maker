@@ -4,6 +4,7 @@ import 'package:quiz_maker/screens/signup.dart';
 import 'package:quiz_maker/services/auth.dart';
 import 'package:quiz_maker/widgets/appbar.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:quiz_maker/widgets/auth_error.dart';
 class SignInScreen extends StatefulWidget {
   const SignInScreen({Key? key}) : super(key: key);
   @override
@@ -20,14 +21,19 @@ class _SignInScreenState extends State<SignInScreen> {
       setState(() {
         isLoading = true;
       });
-       await authService.signInWithEmailAndPass(email, password);
+      final res = await authService.signInWithEmailAndPass(email, password);
       setState(() {
         isLoading = false;
       });
-      Navigator.pushReplacement(context,
-      MaterialPageRoute(
-        builder: (context) => Home()
-      ));
+      if(res != 'sign in'){
+        await showAlertDialog(context);
+      }
+      else {
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(
+                builder: (context) => Home()
+            ));
+      }
     }
   }
   void initState(){
@@ -101,8 +107,8 @@ class _SignInScreenState extends State<SignInScreen> {
                             fontSize: 16,
                           ),
                         ),
-                        onPressed: () {
-                          signIn();
+                        onPressed: () async {
+                          await signIn();
                         },
                       ),
                     ),

@@ -3,6 +3,7 @@ import 'package:quiz_maker/screens/home.dart';
 import 'package:quiz_maker/screens/signin.dart';
 import 'package:quiz_maker/services/auth.dart';
 import 'package:quiz_maker/widgets/appbar.dart';
+import 'package:quiz_maker/widgets/auth_error.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -88,12 +89,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                   ),
                   onPressed: () async {
-                    await _authService.signUpWithEmailAndPass(email, password);
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (BuildContext context) => const Home(),
-                        ));
+                    final res = await _authService.signUpWithEmailAndPass(email, password);
+                    if(res != "sign up")
+                      {
+                        await showAlertDialog(context);
+                      }
+                    else {
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (BuildContext context) => const Home(),
+                          ));
+                    }
                   },
                 ),
               ),
