@@ -1,18 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:quiz_maker/screens/signin.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+  const MyApp({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: SignInScreen()
+       home: FutureBuilder(
+          future: Firebase.initializeApp(),
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              print('error');
+              return SomethingWentWrong();
+            }
+            if(snapshot.connectionState == ConnectionState.done)
+            {
+              return SignInScreen();
+            }
+            return Container();
+          }),
     );
   }
 }
+
+Widget SomethingWentWrong() {
+  return Container(
+    child: Text('wrong'),
+  );
+}
+
 
 

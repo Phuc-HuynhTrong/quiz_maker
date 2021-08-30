@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:quiz_maker/screens/home.dart';
 import 'package:quiz_maker/screens/signin.dart';
+import 'package:quiz_maker/services/auth.dart';
 import 'package:quiz_maker/widgets/appbar.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -11,6 +13,7 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
   late String name, email, password;
+  final _authService =  AuthService();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,11 +37,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 decoration: InputDecoration(
                   hintText: 'Name',
                 ),
-                onChanged: (val){
+                onChanged: (val) {
                   name = val;
                 },
               ),
-              SizedBox(height: 10,),
+              SizedBox(
+                height: 10,
+              ),
               TextFormField(
                 validator: (val) {
                   return val!.isEmpty ? 'Enter your email' : null;
@@ -46,7 +51,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 decoration: InputDecoration(
                   hintText: 'Email',
                 ),
-                onChanged: (val){
+                onChanged: (val) {
                   email = val;
                 },
               ),
@@ -60,7 +65,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 decoration: InputDecoration(
                   hintText: 'Password',
                 ),
-                onChanged: (val){
+                onChanged: (val) {
                   password = val;
                 },
               ),
@@ -76,13 +81,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
                 child: TextButton(
                   child: Text(
-                    'Sign in',
+                    'Sign up',
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,
                     ),
                   ),
-                  onPressed: () {},
+                  onPressed: () async {
+                    await _authService.signUpWithEmailAndPass(email, password);
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (BuildContext context) => const Home(),
+                        ));
+                  },
                 ),
               ),
               SizedBox(
@@ -96,10 +108,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     style: TextStyle(fontSize: 16),
                   ),
                   TextButton(
-                      onPressed: (){
-                        Navigator.pushReplacement(context,
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                            context,
                             MaterialPageRoute(
-                              builder: (BuildContext context) => const SignInScreen(),
+                              builder: (BuildContext context) =>
+                                  const SignInScreen(),
                             ));
                       },
                       child: Text(
