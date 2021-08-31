@@ -1,3 +1,0 @@
-class Question{
-  String a='';
-}
