@@ -1,4 +1,5 @@
 class Question {
+  String id;
   String imageURL;
   String question;
   String option1;
@@ -7,6 +8,7 @@ class Question {
   String option4;
   String rightAnswer;
   Question({
+    required this.id,
     required this.imageURL,
     required this.option1,
     required this.option2,
@@ -18,6 +20,7 @@ class Question {
   factory Question.fromMap(Map<String, dynamic> data) {
     if (data == null)
       return Question(
+          id: '',
           imageURL: '',
           option1: '',
           option2: '',
@@ -26,6 +29,7 @@ class Question {
           question: '',
           rightAnswer: '');
     return Question(
+        id: data['id'],
         imageURL: data['imageURl'],
         option1: data['option1'],
         option2: data['option2'],
@@ -36,6 +40,7 @@ class Question {
   }
   Map<String, dynamic> toMap() {
     return {
+      'id': id,
       'imageURL': imageURL,
       'question': question,
       'option1': option1,
