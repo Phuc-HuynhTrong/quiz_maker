@@ -33,10 +33,37 @@ class DatabaseService {
         .then((value) => print('add question completed'))
         .catchError((error) => print(error));
   }
-  Future<Quiz> getQuizByID(String id) async {
-    return quizs
-        .doc(id)
-        .get()
-        .then((value) => Quiz.fromMap(value.data() as Map<String, dynamic>));
+
+  Future<Quiz> getQuizByCode(String code) async {
+    Quiz quiz = Quiz(id: '', code: '', imageURL: '', title: '');
+    await quizs.get().then((value) => value.docs.map((e) => {
+          if (e.exists)
+            {
+              if (Quiz.fromMap(e.data() as Map<String, dynamic>).code == code)
+                quiz = Quiz.fromMap(e.data() as Map<String, dynamic>)
+            }
+        }));
+    return quiz;
+  }
+
+  Future<List<Question>> getQuestionsbyQuizid(Quiz quiz) async {
+    List<Question> list = [];
+    await quizs.doc(quiz.id).collection('questions').get().then((value) =>
+        {value.docs.map((e) => list.add(Question.fromMap(e.data())))});
+    return list;
+  }
+
+  Future<List<Quiz>> getListQuizOfUser() async {
+    List<Quiz> listQuiz = [];
+    List<String> listIdCodeQuiz = [];
+    await users.doc(uid).collection('codeQuizs').get().then((value) => {
+          value.docs
+              .map((e) => listIdCodeQuiz.add(e.data().entries.first.value))
+        });
+    for (int i = 0; i < listIdCodeQuiz.length; i++) {
+      Quiz q = getQuizByCode(listIdCodeQuiz[i]) as Quiz;
+      listQuiz.add(q);
+    }
+    return listQuiz;
   }
 }
