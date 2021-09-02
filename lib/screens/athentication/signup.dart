@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:quiz_maker/screens/home.dart';
-import 'package:quiz_maker/screens/signin.dart';
+import 'package:quiz_maker/screens/home/home.dart';
+import 'package:quiz_maker/screens/athentication/signin.dart';
 import 'package:quiz_maker/services/auth.dart';
 import 'package:quiz_maker/widgets/appbar.dart';
 import 'package:quiz_maker/widgets/auth_error.dart';
@@ -89,7 +89,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                   ),
                   onPressed: () async {
-                    final res = await _authService.signUpWithEmailAndPass(email, password);
+                    final res = await _authService.signUpWithEmailAndPass(email, password, name);
                     if(res != "sign up")
                       {
                         await showAlertDialog(context);

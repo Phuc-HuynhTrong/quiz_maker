@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthService {
   FirebaseAuth _auth = FirebaseAuth.instance;
-  Stream<User?> streamUser() {
+  Stream<User?> streamUser()   {
     try {
       _auth.authStateChanges().listen((User? user) {
         if (user == null) {
@@ -16,11 +16,13 @@ class AuthService {
     }
     return _auth.authStateChanges();
   }
-
-  Future signUpWithEmailAndPass(String email, String password) async {
+  User? get getCurrentUser => _auth.currentUser;
+  Future signUpWithEmailAndPass(String email, String password, String name) async {
     try {
       await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
+      User? user = getCurrentUser!;
+      user.updateDisplayName(name);
       return "sign up";
     } catch (e) {
       print(e);

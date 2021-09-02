@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:quiz_maker/screens/home.dart';
-import 'package:quiz_maker/screens/signup.dart';
+import 'package:quiz_maker/screens/home/home.dart';
+import 'package:quiz_maker/screens/athentication/signup.dart';
 import 'package:quiz_maker/services/auth.dart';
 import 'package:quiz_maker/widgets/appbar.dart';
 import 'package:firebase_core/firebase_core.dart';

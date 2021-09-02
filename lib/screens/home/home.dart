@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:quiz_maker/screens/accountscreen.dart';
-import 'package:quiz_maker/screens/createquiz.dart';
-import 'package:quiz_maker/screens/playquiz.dart';
+import 'package:quiz_maker/screens/account/accountscreen.dart';
+import 'package:quiz_maker/screens/createQuiz/createquiz.dart';
+import 'package:quiz_maker/screens/PLayQuiz/playquiz.dart';
 import 'package:quiz_maker/widgets/appbar.dart';
 
 class Home extends StatefulWidget {
@@ -42,9 +42,9 @@ class _HomeState extends State<Home> {
         ),
         body: Container(
           child: index == 0
-              ? CreatQuizScreen()
+              ? PlayQuizScreen()
               : index == 1
-                  ? PlayQuizScreen()
+                  ? CreatQuizScreen()
                   : AccountScreen(),
         ),
         bottomNavigationBar: BottomNavigationBar(
