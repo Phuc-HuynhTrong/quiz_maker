@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:quiz_maker/models/Quiz.dart';
 import 'package:quiz_maker/services/auth.dart';
 import 'package:quiz_maker/services/database.dart';
+import 'package:quiz_maker/services/storage.dart';
 
 class CreateQuizHome extends StatefulWidget {
   const CreateQuizHome({Key? key}) : super(key: key);
@@ -21,6 +22,7 @@ class _CreateQuizHomeState extends State<CreateQuizHome> {
   bool uploadImage = false;
   final ImagePicker picker = ImagePicker();
   AuthService authService = AuthService();
+  Storage storage =Storage();
   late String uid = '';
   late DatabaseService databaseService = DatabaseService(uid: uid) ;
 
@@ -163,6 +165,7 @@ class _CreateQuizHomeState extends State<CreateQuizHome> {
             Quiz quiz = Quiz(
                 id: '', code: code, imageURL: imageFile.path, title: title);
             databaseService.addQuiz(quiz);
+            storage.uploadImageToFirebase(File(imageFile.path));
           },
           child: Text(
             'Add quiz',

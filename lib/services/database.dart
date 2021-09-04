@@ -22,7 +22,7 @@ class DatabaseService {
         .then((value) => print('add quizcode completed'));
     DocumentReference codeRef =
         await users.doc(uid).collection('codeQuizs').doc();
-    await codeRef.set(quiz.code).then((value) => print('add code to users'));
+    await codeRef.set(quiz.toMapCode()).then((value) => print('add code to users'));
   }
 
   Future addQuestion(Question question, String idQuiz) async {

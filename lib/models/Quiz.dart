@@ -21,6 +21,12 @@ class Quiz {
     };
   }
 
+  Map<String, dynamic> toMapCode() {
+    return {
+      'code': code,
+    };
+  }
+
   factory Quiz.fromMap(Map<String, dynamic> data) {
     if (data == null) {
       return Quiz(
