@@ -12,7 +12,7 @@ class AuthService {
         }
       });
     } catch (e) {
-      print(e);
+      print('error' + e.toString());
     }
     return _auth.authStateChanges();
   }
@@ -25,7 +25,7 @@ class AuthService {
       user.updateDisplayName(name);
       return "sign up";
     } catch (e) {
-      print(e);
+      print('error' + e.toString());
     }
   }
 
@@ -33,7 +33,7 @@ class AuthService {
     try {
       return await _auth.signOut();
     } catch (e) {
-      print(e);
+      print('error' + e.toString());
       return null;
     }
   }
@@ -44,7 +44,7 @@ class AuthService {
       return "sign in";
     }
     catch(e){
-      print(e);
+      print('error' + e.toString());
     }
   }
 }

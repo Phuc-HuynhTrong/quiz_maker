@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:quiz_maker/screens/account/accountscreen.dart';
+import 'package:quiz_maker/screens/createQuiz/createQuizHome.dart';
 import 'package:quiz_maker/screens/createQuiz/createquiz.dart';
 import 'package:quiz_maker/screens/PLayQuiz/playquiz.dart';
 import 'package:quiz_maker/widgets/appbar.dart';
@@ -44,7 +45,7 @@ class _HomeState extends State<Home> {
           child: index == 0
               ? PlayQuizScreen()
               : index == 1
-                  ? CreatQuizScreen()
+                  ? CreateQuizHome()
                   : AccountScreen(),
         ),
         bottomNavigationBar: BottomNavigationBar(
