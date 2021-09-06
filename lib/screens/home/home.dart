@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:quiz_maker/screens/account/accountscreen.dart';
 import 'package:quiz_maker/screens/createQuiz/createQuizHome.dart';
 import 'package:quiz_maker/screens/createQuiz/createquiz.dart';
-import 'package:quiz_maker/screens/PLayQuiz/playquiz.dart';
+import 'package:quiz_maker/screens/PLayQuiz/playquizhome.dart';
 import 'package:quiz_maker/widgets/appbar.dart';
 
 class Home extends StatefulWidget {

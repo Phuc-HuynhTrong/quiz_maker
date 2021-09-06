@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:quiz_maker/models/Question.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:quiz_maker/models/Quiz.dart';
+import 'package:quiz_maker/screens/createQuiz/addquestions.dart';
 import 'package:quiz_maker/services/auth.dart';
 import 'package:quiz_maker/services/database.dart';
 import 'package:quiz_maker/services/storage.dart';
@@ -22,9 +23,9 @@ class _CreateQuizHomeState extends State<CreateQuizHome> {
   bool uploadImage = false;
   final ImagePicker picker = ImagePicker();
   AuthService authService = AuthService();
-  Storage storage =Storage();
+  Storage storage = Storage();
   late String uid = '';
-  late DatabaseService databaseService = DatabaseService(uid: uid) ;
+  late DatabaseService databaseService = DatabaseService(uid: uid);
 
   @override
   void initState() {
@@ -33,6 +34,7 @@ class _CreateQuizHomeState extends State<CreateQuizHome> {
     databaseService = DatabaseService(uid: uid);
     super.initState();
   }
+
   void _onImageButtonPressed(ImageSource source,
       {BuildContext? context, bool isMultiImage = false}) async {
     try {
@@ -104,7 +106,7 @@ class _CreateQuizHomeState extends State<CreateQuizHome> {
                             hintText: 'Enter title of quiz',
                             hintStyle:
                                 TextStyle(color: Colors.black38, fontSize: 20)),
-                        onChanged: (val){
+                        onChanged: (val) {
                           title = val;
                         },
                       ),
@@ -126,7 +128,7 @@ class _CreateQuizHomeState extends State<CreateQuizHome> {
                             hintText: 'Enter code of quiz',
                             hintStyle:
                                 TextStyle(color: Colors.black38, fontSize: 20)),
-                        onChanged: (val){
+                        onChanged: (val) {
                           code = val;
                         },
                       ),
@@ -149,7 +151,12 @@ class _CreateQuizHomeState extends State<CreateQuizHome> {
       floatingActionButton: FloatingActionButton(
         elevation: 1,
         backgroundColor: Colors.grey,
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) => AddQuestionScreen()));
+        },
         child: Center(
             child: Text(
           'Add\nques',
