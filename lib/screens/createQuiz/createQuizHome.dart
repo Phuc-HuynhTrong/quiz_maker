@@ -36,7 +36,7 @@ class _CreateQuizHomeState extends State<CreateQuizHome> {
   }
 
   void _onImageButtonPressed(ImageSource source,
-      {BuildContext? context, bool isMultiImage = false}) async {
+      {BuildContext? context}) async {
     try {
       final pickedFile = await picker.pickImage(
         source: source,
@@ -142,7 +142,11 @@ class _CreateQuizHomeState extends State<CreateQuizHome> {
           SliverList(
               delegate: SliverChildBuilderDelegate(
             (BuildContext context, int index) {
-              return Container();
+              return Container(
+                alignment: Alignment.center,
+                color: Colors.white,
+                child: Text(listQuestion[index].question.toString()),
+              );
             },
             childCount: listQuestion.length,
           )),
@@ -151,11 +155,26 @@ class _CreateQuizHomeState extends State<CreateQuizHome> {
       floatingActionButton: FloatingActionButton(
         elevation: 1,
         backgroundColor: Colors.grey,
-        onPressed: () {
-          Navigator.push(
+        onPressed: () async {
+          Question ques = Question(
+              id: '',
+              imageURL: '',
+              option1: '',
+              option2: '',
+              option3: '',
+              option4: '',
+              question: '',
+              rightAnswer: '');
+          await Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (BuildContext context) => AddQuestionScreen()));
+                  builder: (BuildContext context) => AddQuestionScreen(
+                        ques: ques,
+                      )));
+          print ('ques : ' + ques.question);
+          if (ques.question != '') {
+            listQuestion.add(ques);
+          }
         },
         child: Center(
             child: Text(

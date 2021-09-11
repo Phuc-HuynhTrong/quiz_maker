@@ -17,7 +17,7 @@ class _CreatQuizScreenState extends State<CreatQuizScreen> {
   bool uploadImage = false;
   final ImagePicker picker = ImagePicker();
   void _onImageButtonPressed(ImageSource source,
-      {BuildContext? context, bool isMultiImage = false}) async {
+      {BuildContext? context}) async {
     try {
       final pickedFile = await picker.pickImage(
         source: source,
