@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 class Storage {
   Future uploadImageToFirebase(File _imageFile) async {
@@ -11,7 +10,7 @@ class Storage {
         _imageFile);
     await uploadTask.whenComplete(() => print('uploaded image'));
   }
-  Future<File> _loadImages(String path) async {
+  Future<File> loadImages(String path) async {
     final firebase_storage.Reference reference = firebase_storage
         .FirebaseStorage.instance
         .ref()

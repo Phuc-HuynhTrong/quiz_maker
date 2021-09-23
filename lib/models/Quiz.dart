@@ -1,5 +1,3 @@
-import 'package:quiz_maker/models/Question.dart';
-
 class Quiz {
   String code;
   String id;
@@ -28,10 +26,6 @@ class Quiz {
   }
 
   factory Quiz.fromMap(Map<String, dynamic> data) {
-    if (data == null) {
-      return Quiz(
-          code: '', imageURL: '', title: '', id: '');
-    }
     return Quiz(
         code: data['code'],
         imageURL: data['imageURL'],

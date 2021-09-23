@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
           builder: (context, snapshot) {
             if (snapshot.hasError) {
               print('error');
-              return SomethingWentWrong();
+              return someThingWrong();
             }
             if(snapshot.connectionState == ConnectionState.done)
             {
@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
-Widget SomethingWentWrong() {
+Widget someThingWrong() {
   return Container(
     child: Text('wrong'),
   );

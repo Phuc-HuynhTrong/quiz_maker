@@ -133,6 +133,9 @@ class _CreateQuizHomeState extends State<CreateQuizHome> {
                         },
                       ),
                     ),
+                    SizedBox(
+                      height: 30,
+                    )
                   ],
                 );
               },
@@ -144,8 +147,44 @@ class _CreateQuizHomeState extends State<CreateQuizHome> {
             (BuildContext context, int index) {
               return Container(
                 alignment: Alignment.center,
-                color: Colors.white,
-                child: Text(listQuestion[index].question.toString()),
+                color: Colors.blue[100],
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        MaterialButton(
+                          onPressed: () {},
+                          child: Container(
+                              margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                              padding: EdgeInsets.all(1),
+                              height: 60,
+                              width: MediaQuery.of(context).size.width - 80,
+                              decoration: BoxDecoration(
+                                  color: Colors.blue[700],
+                                  border: Border.all(
+                                      color: Colors.white, width: 2)),
+                              child: Text(
+                                'Question ' +
+                                    (index + 1 ).toString() +
+                                    ' :' +
+                                    listQuestion[index].question.toString(),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                ),
+                              )),
+                        ),
+                        IconButton(
+                            onPressed: () {
+                              setState(() {
+                                listQuestion.removeAt(index);
+                              });
+                            },
+                            icon: Icon(Icons.clear))
+                      ],
+                    ),
+                  ],
+                ),
               );
             },
             childCount: listQuestion.length,
@@ -171,9 +210,11 @@ class _CreateQuizHomeState extends State<CreateQuizHome> {
                   builder: (BuildContext context) => AddQuestionScreen(
                         ques: ques,
                       )));
-          print ('ques : ' + ques.question);
+          print('ques : ' + ques.question);
           if (ques.question != '') {
-            listQuestion.add(ques);
+            setState(() {
+              listQuestion.add(ques);
+            });
           }
         },
         child: Center(
@@ -187,11 +228,18 @@ class _CreateQuizHomeState extends State<CreateQuizHome> {
             color: Colors.white,
             border: Border.all(color: Colors.blue, width: 3)),
         child: TextButton(
-          onPressed: () {
+          onPressed: () async {
             Quiz quiz = Quiz(
                 id: '', code: code, imageURL: imageFile.path, title: title);
-            databaseService.addQuiz(quiz);
+            await databaseService.addQuiz(quiz);
             storage.uploadImageToFirebase(File(imageFile.path));
+            final q = await databaseService.getQuizByCode(code);
+            print('code ne nha: ' + code);
+            print('q ne nha : ' + q.code.toString());
+            for(int i = 0 ;i < listQuestion.length; i++)
+              {
+                databaseService.addQuestion(listQuestion[i], q.id);
+              }
           },
           child: Text(
             'Add quiz',

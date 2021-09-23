@@ -18,16 +18,6 @@ class Question {
     required this.rightAnswer,
   });
   factory Question.fromMap(Map<String, dynamic> data) {
-    if (data == null)
-      return Question(
-          id: '',
-          imageURL: '',
-          option1: '',
-          option2: '',
-          option3: '',
-          option4: '',
-          question: '',
-          rightAnswer: '');
     return Question(
         id: data['id'],
         imageURL: data['imageURl'],

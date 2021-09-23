@@ -20,9 +20,10 @@ class DatabaseService {
     await quizRef
         .set(quiz.toMap())
         .then((value) => print('add quizcode completed'));
-    DocumentReference codeRef =
-        await users.doc(uid).collection('codeQuizs').doc();
-    await codeRef.set(quiz.toMapCode()).then((value) => print('add code to users'));
+    DocumentReference codeRef = users.doc(uid).collection('codeQuizs').doc();
+    await codeRef
+        .set(quiz.toMapCode())
+        .then((value) => print('add code to users'));
   }
 
   Future addQuestion(Question question, String idQuiz) async {
@@ -36,13 +37,9 @@ class DatabaseService {
 
   Future<Quiz> getQuizByCode(String code) async {
     Quiz quiz = Quiz(id: '', code: '', imageURL: '', title: '');
-    await quizs.get().then((value) => value.docs.map((e) => {
-          if (e.exists)
-            {
-              if (Quiz.fromMap(e.data() as Map<String, dynamic>).code == code)
-                quiz = Quiz.fromMap(e.data() as Map<String, dynamic>)
-            }
-        }));
+    await quizs.where('code', isEqualTo: code).get().then((value) =>
+        quiz = Quiz.fromMap(value.docs.first.data() as Map<String, dynamic>));
+    print('quiz id: ' + quiz.id);
     return quiz;
   }
 

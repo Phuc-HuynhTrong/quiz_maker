@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:quiz_maker/screens/athentication/signin.dart';
-import 'package:quiz_maker/screens/home/home.dart';
 import 'package:quiz_maker/services/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -44,7 +43,7 @@ class _AccountScreenState extends State<AccountScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      user == null ? 'your email' : user.displayName.toString(),
+                      user != null ?user.displayName.toString(): "",
                       style: TextStyle(color: Colors.black, fontSize: 20),
                     )
                   ],
@@ -58,7 +57,7 @@ class _AccountScreenState extends State<AccountScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      user == null ? 'your email' : user.email.toString(),
+                      user != null ?user.email.toString():'your email',
                       style: TextStyle(color: Colors.black, fontSize: 20),
                     )
                   ],
@@ -130,7 +129,7 @@ class _AccountScreenState extends State<AccountScreen> {
                   width: double.infinity,
                   child: TextButton(
                       onPressed: () async {
-                        await  _authService.SignOut();
+                        await  _authService.signout();
                         Navigator.pushReplacement(context,
                           MaterialPageRoute (
                             builder: (BuildContext context) => const SignInScreen()

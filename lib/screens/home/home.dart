@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:quiz_maker/screens/account/accountscreen.dart';
 import 'package:quiz_maker/screens/createQuiz/createQuizHome.dart';
-import 'package:quiz_maker/screens/createQuiz/createquiz.dart';
 import 'package:quiz_maker/screens/PLayQuiz/playquizhome.dart';
 import 'package:quiz_maker/widgets/appbar.dart';
 
@@ -15,11 +14,6 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int index = 0;
-  static List<Widget> tapList = <Widget>[
-    PlayQuizScreen(),
-    CreatQuizScreen(),
-    AccountScreen(),
-  ];
   @override
   void initState() {
     // TODO: implement initState
