@@ -43,6 +43,8 @@ dev_dependencies:
   firebase_storage: ^10.0.3
   image_picker: ^0.8.4
   page_transition: ^2.0.2
+  get_state_manager: ^3.13.0
+  get: ^4.3.8
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

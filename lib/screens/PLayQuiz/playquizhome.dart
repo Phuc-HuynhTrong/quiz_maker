@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:quiz_maker/screens/PLayQuiz/entercodeandplay.dart';
 import 'package:quiz_maker/screens/account/quizsofuser.dart';
 class PlayQuizScreen extends StatefulWidget {
-  const PlayQuizScreen({Key? key}) : super(key: key);
+  final String uid;
+  const PlayQuizScreen({Key? key,required this.uid}) : super(key: key);
 
   @override
   _PlayQuizScreenState createState() => _PlayQuizScreenState();
@@ -54,7 +55,7 @@ class _PlayQuizScreenState extends State<PlayQuizScreen> {
                         context,
                         MaterialPageRoute(
                             builder: (BuildContext context) =>
-                                EnterCodeScreen()));
+                                EnterCodeScreen(uid: widget.uid)));
                   },
                   child: Text(
                     'Play with code',

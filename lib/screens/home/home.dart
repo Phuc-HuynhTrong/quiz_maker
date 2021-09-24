@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:quiz_maker/screens/account/accountscreen.dart';
 import 'package:quiz_maker/screens/createQuiz/createQuizHome.dart';
 import 'package:quiz_maker/screens/PLayQuiz/playquizhome.dart';
+import 'package:quiz_maker/services/auth.dart';
 import 'package:quiz_maker/widgets/appbar.dart';
 
 class Home extends StatefulWidget {
@@ -14,9 +15,12 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int index = 0;
+  AuthService _authService = AuthService();
+  String uid = '';
   @override
   void initState() {
     // TODO: implement initState
+    uid = _authService.getCurrentUser!.uid;
     super.initState();
     setState(() {});
   }
@@ -37,7 +41,7 @@ class _HomeState extends State<Home> {
         ),
         body: Container(
           child: index == 0
-              ? PlayQuizScreen()
+              ? PlayQuizScreen(uid: uid)
               : index == 1
                   ? CreateQuizHome()
                   : AccountScreen(),

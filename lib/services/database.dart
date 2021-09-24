@@ -37,16 +37,26 @@ class DatabaseService {
 
   Future<Quiz> getQuizByCode(String code) async {
     Quiz quiz = Quiz(id: '', code: '', imageURL: '', title: '');
-    await quizs.where('code', isEqualTo: code).get().then((value) =>
-        quiz = Quiz.fromMap(value.docs.first.data() as Map<String, dynamic>));
+    await quizs.where('code', isEqualTo: code).get().then((value) => {
+          if (value.docs.isNotEmpty)
+            quiz = Quiz.fromMap(value.docs.first.data() as Map<String, dynamic>)
+        });
     print('quiz id: ' + quiz.id);
     return quiz;
   }
 
   Future<List<Question>> getQuestionsbyQuizid(Quiz quiz) async {
     List<Question> list = [];
-    await quizs.doc(quiz.id).collection('questions').get().then((value) =>
-        {value.docs.map((e) => list.add(Question.fromMap(e.data())))});
+    List<QueryDocumentSnapshot<Map<String, dynamic>>> listcache = [];
+    await quizs.doc(quiz.id).collection('questions').get().then((value) => {
+      listcache = value.docs.toList(),
+    });
+    for(int i = 0 ; i < listcache.length; i++)
+      {
+        list.add(Question.fromMap(listcache[i].data()));
+      }
+    print(quiz.id);
+    print('list lenght ' + list.length.toString());
     return list;
   }
 
