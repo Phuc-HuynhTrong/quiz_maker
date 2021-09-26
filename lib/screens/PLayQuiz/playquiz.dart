@@ -46,30 +46,10 @@ class _PlayQuizState extends State<PlayQuiz> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       ProcessBar(
                         listQues: widget.listQuestion,
                       ),
-                      SizedBox(
-                        height: 30,
-                      ),
-                      Text.rich(TextSpan(
-                          text: "Question 1",
-                          style: Theme.of(context)
-                              .textTheme
-                              .headline4!
-                              .copyWith(color: Colors.white),
-                          children: [
-                            TextSpan(
-                              text: "/ ${list.length}",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headline5!
-                                  .copyWith(color: Colors.white),
-                            )
-                          ])),
                       SizedBox(
                         height: 30,
                       ),
@@ -78,7 +58,30 @@ class _PlayQuizState extends State<PlayQuiz> {
                           child: PageView.builder(
                               itemCount: list.length,
                               itemBuilder: (context, index) =>
-                                  QuestionCard(list: list, index: index)))
+                                  Column(
+                                   crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text.rich(TextSpan(
+                                          text: "Question " + (index +1).toString(),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline4!
+                                              .copyWith(color: Colors.white),
+                                          children: [
+                                            TextSpan(
+                                              text: "/ ${list.length}",
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline5!
+                                                  .copyWith(color: Colors.white),
+                                            )
+                                          ])),
+                                      SizedBox(
+                                        height: 30,
+                                      ),
+                                      QuestionCard(list: list, index: index),
+                                    ],
+                                  )))
                     ],
                   ),
                 ),

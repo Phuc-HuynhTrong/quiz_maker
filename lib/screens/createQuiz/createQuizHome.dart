@@ -203,7 +203,7 @@ class _CreateQuizHomeState extends State<CreateQuizHome> {
               option3: '',
               option4: '',
               question: '',
-              rightAnswer: '');
+              rightAnswer: 0);
           await Navigator.push(
               context,
               MaterialPageRoute(

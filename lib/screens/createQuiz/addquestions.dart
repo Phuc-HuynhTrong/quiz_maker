@@ -16,7 +16,7 @@ class _AddQuestionScreenState extends State<AddQuestionScreen> {
   late String op2;
   late String op3;
   late String op4;
-  late String answer;
+  late int answer;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -246,7 +246,7 @@ class _AddQuestionScreenState extends State<AddQuestionScreen> {
                       ),
                     ),
                     onChanged: (val) {
-                      answer = val;
+                      answer = int.parse(val);
                     },
                   ),
                 ),

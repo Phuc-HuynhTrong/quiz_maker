@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:quiz_maker/controllers/questionController.dart';
 import 'package:quiz_maker/models/Question.dart';
+import 'package:quiz_maker/screens/PLayQuiz/optionview.dart';
+import 'package:get/get.dart';
 
 class QuestionCard extends StatefulWidget {
   final List<Question> list;
@@ -18,8 +21,10 @@ class _QuestionCardState extends State<QuestionCard> {
     ques = widget.list[widget.index];
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
+    QuestionController controller = Get.put(QuestionController());
     return Container(
       margin: EdgeInsets.all(20),
       width: MediaQuery.of(context).size.width,
@@ -43,118 +48,12 @@ class _QuestionCardState extends State<QuestionCard> {
             SizedBox(
               height: 30,
             ),
-            Container(
-              padding: EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey, width: 3),
-                  borderRadius: BorderRadius.circular(25)),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    ques.option1,
-                    style: Theme.of(context)
-                        .textTheme
-                        .headline6!
-                        .copyWith(color: Colors.black),
-                  ),
-                  Container(
-                    height: 30,
-                    width: 30,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey, width: 3),
-                        borderRadius: BorderRadius.circular(50)),
-                  )
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Container(
-              padding: EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey, width: 3),
-                  borderRadius: BorderRadius.circular(25)),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    ques.option2,
-                    style: Theme.of(context)
-                        .textTheme
-                        .headline6!
-                        .copyWith(color: Colors.black),
-                  ),
-                  Container(
-                    height: 30,
-                    width: 30,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey, width: 3),
-                        borderRadius: BorderRadius.circular(50)),
-                  )
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Container(
-              padding: EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey, width: 3),
-                  borderRadius: BorderRadius.circular(25)),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    ques.option3,
-                    style: Theme.of(context)
-                        .textTheme
-                        .headline6!
-                        .copyWith(color: Colors.black),
-                  ),
-                  Container(
-                    height: 30,
-                    width: 30,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey, width: 3),
-                        borderRadius: BorderRadius.circular(50)),
-                  )
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            Container(
-              padding: EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey, width: 3),
-                  borderRadius: BorderRadius.circular(25)),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    ques.option4,
-                    style: Theme.of(context)
-                        .textTheme
-                        .headline6!
-                        .copyWith(color: Colors.black),
-                  ),
-                  Container(
-                    height: 30,
-                    width: 30,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey, width: 3),
-                        borderRadius: BorderRadius.circular(50)),
-                  )
-                ],
-              ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
+            ...List.generate(
+                4,
+                (index) => Option(
+                    index: index + 1,
+                    ques: ques,
+                    press: () => controller.CheckAns(ques, index+1))),
           ],
         ),
       ),

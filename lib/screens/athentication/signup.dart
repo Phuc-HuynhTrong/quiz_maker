@@ -13,7 +13,7 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
-  late String name, email, password;
+  late String name, email, password, confirmpass;
   final _authService =  AuthService();
   @override
   Widget build(BuildContext context) {
@@ -69,9 +69,25 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 onChanged: (val) {
                   password = val;
                 },
+                obscureText: true,
               ),
               SizedBox(
-                height: 10,
+                height: 5,
+              ),
+              TextFormField(
+                validator: (val) {
+                  return val!.isEmpty ? 'Confirm your password' : null;
+                },
+                decoration: InputDecoration(
+                  hintText: 'Confirm password',
+                ),
+                onChanged: (val) {
+                  confirmpass = val;
+                },
+                obscureText: true,
+              ),
+              SizedBox(
+                height: 5,
               ),
               Container(
                 width: MediaQuery.of(context).size.width - 40,
@@ -105,7 +121,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
               ),
               SizedBox(
-                height: 10,
+                height: 5,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

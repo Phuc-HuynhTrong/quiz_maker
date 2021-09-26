@@ -16,6 +16,7 @@ class _SignInScreenState extends State<SignInScreen> {
   late String email, password;
   bool isLoading = false;
   final authService =  AuthService();
+  late String pasHid = '';
   signIn() async {
     if (_formKey.currentState!.validate()) {
       setState(() {
@@ -88,6 +89,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       onChanged: (val) {
                         password = val;
                       },
+                      obscureText:  true,
                     ),
                     SizedBox(
                       height: 10,

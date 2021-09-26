@@ -18,7 +18,7 @@ class ProcessBar extends StatelessWidget {
         borderRadius: BorderRadius.circular(50),
       ),
       child: GetBuilder<QuestionController>(
-        init: QuestionController(),
+        init:  QuestionController(),
         builder: (controller) {
           controller.creatQuestionList(listQues);
           return Stack(children: [

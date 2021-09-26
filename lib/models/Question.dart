@@ -6,7 +6,7 @@ class Question {
   String option2;
   String option3;
   String option4;
-  String rightAnswer;
+  int rightAnswer;
   Question({
     required this.id,
     required this.imageURL,
