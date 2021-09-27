@@ -22,7 +22,10 @@ class QuestionController extends GetxController
       ..addListener(() {
         update();
       });
-    _animationController.forward();
+    _animationController.reset();
+    _animationController.forward().whenComplete(() => nextQuestion());
+
+    pageController = PageController();
     super.onInit();
   }
 
@@ -30,6 +33,7 @@ class QuestionController extends GetxController
   void onClose() {
     super.onClose();
     _animationController.dispose();
+    pageController.dispose();
   }
 
   void reSetAnimation() {
@@ -39,15 +43,29 @@ class QuestionController extends GetxController
   void creatQuestionList(List<Question> list) {
     this.listQues = list;
   }
-  void CheckAns(Question question, int selectedIndex){
+
+  void CheckAns(Question question, int selectedIndex) {
     selectedOption = selectedIndex;
-    if(question.rightAnswer == selectedIndex)
-     {
-       isAnswer = true;
-       numofCorrect += 1;
-     }
+    if (question.rightAnswer == selectedIndex) {
+      isAnswer = true;
+      numofCorrect += 1;
+    }
     _animationController.stop();
     update();
+
+    Future.delayed(Duration(seconds: 2), () {
+      nextQuestion();
+    });
   }
+
+  void nextQuestion() {
+    isAnswer = false;
+    selectedOption = 0;
+    pageController.nextPage(
+        duration: Duration(milliseconds: 250), curve: Curves.ease);
+    _animationController.reset();
+    _animationController.forward().whenComplete(() => nextQuestion());
+  }
+
   int get selected => this.selectedOption;
 }

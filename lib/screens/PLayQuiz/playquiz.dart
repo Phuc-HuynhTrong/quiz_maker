@@ -56,6 +56,8 @@ class _PlayQuizState extends State<PlayQuiz> {
                       Container(
                         height: 610,
                           child: PageView.builder(
+                            physics: NeverScrollableScrollPhysics(),
+                            controller: questionController.pageController,
                               itemCount: list.length,
                               itemBuilder: (context, index) =>
                                   Column(
