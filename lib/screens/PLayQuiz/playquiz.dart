@@ -32,12 +32,20 @@ class _PlayQuizState extends State<PlayQuiz> {
         backgroundColor: Color(0xff1d2859),
         appBar: AppBar(
           backgroundColor: Color(0xff1d2859),
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back_ios),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                questionController.nextQuestion();
+              },
+              child: Text(
+                'skip',
+                style: Theme.of(context)
+                    .textTheme
+                    .headline5!
+                    .copyWith(color: Colors.white),
+              ),
+            )
+          ],
         ),
         body: SingleChildScrollView(
           child: Stack(
@@ -54,17 +62,18 @@ class _PlayQuizState extends State<PlayQuiz> {
                         height: 30,
                       ),
                       Container(
-                        height: 610,
+                          height: 610,
                           child: PageView.builder(
-                            physics: NeverScrollableScrollPhysics(),
-                            controller: questionController.pageController,
+                              physics: NeverScrollableScrollPhysics(),
+                              controller: questionController.pageController,
                               itemCount: list.length,
-                              itemBuilder: (context, index) =>
-                                  Column(
-                                   crossAxisAlignment: CrossAxisAlignment.start,
+                              itemBuilder: (context, index) => Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text.rich(TextSpan(
-                                          text: "Question " + (index +1).toString(),
+                                          text: "Question " +
+                                              (index + 1).toString(),
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline4!
@@ -75,7 +84,8 @@ class _PlayQuizState extends State<PlayQuiz> {
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .headline5!
-                                                  .copyWith(color: Colors.white),
+                                                  .copyWith(
+                                                      color: Colors.white),
                                             )
                                           ])),
                                       SizedBox(

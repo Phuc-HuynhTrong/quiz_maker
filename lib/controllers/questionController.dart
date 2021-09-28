@@ -1,7 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:get/state_manager.dart';
 import 'package:quiz_maker/models/Question.dart';
+import 'package:quiz_maker/screens/PLayQuiz/scorescreen.dart';
 
 class QuestionController extends GetxController
     with SingleGetTickerProviderMixin {
@@ -14,6 +15,7 @@ class QuestionController extends GetxController
   int selectedOption = 0;
   // so that we can access our animation outside
   Animation get animation => this._animation;
+  late int page = 0;
   @override
   void onInit() {
     _animationController =
@@ -42,6 +44,7 @@ class QuestionController extends GetxController
 
   void creatQuestionList(List<Question> list) {
     this.listQues = list;
+    page = listQues.length;
   }
 
   void CheckAns(Question question, int selectedIndex) {
@@ -59,13 +62,16 @@ class QuestionController extends GetxController
   }
 
   void nextQuestion() {
-    isAnswer = false;
-    selectedOption = 0;
-    pageController.nextPage(
-        duration: Duration(milliseconds: 250), curve: Curves.ease);
-    _animationController.reset();
-    _animationController.forward().whenComplete(() => nextQuestion());
+    if (page != -1) {
+      isAnswer = false;
+      selectedOption = 0;
+      pageController.nextPage(
+          duration: Duration(milliseconds: 250), curve: Curves.ease);
+      page -= 1;
+      _animationController.reset();
+      _animationController.forward().whenComplete(() => nextQuestion());
+    }
+    Get.to(ScoreScreen());
   }
-
   int get selected => this.selectedOption;
 }

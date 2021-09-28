@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:quiz_maker/models/Question.dart';
 import 'package:quiz_maker/models/Quiz.dart';
+import 'package:quiz_maker/models/result.dart';
 
 class DatabaseService {
   final String uid;
@@ -49,12 +50,11 @@ class DatabaseService {
     List<Question> list = [];
     List<QueryDocumentSnapshot<Map<String, dynamic>>> listcache = [];
     await quizs.doc(quiz.id).collection('questions').get().then((value) => {
-      listcache = value.docs.toList(),
-    });
-    for(int i = 0 ; i < listcache.length; i++)
-      {
-        list.add(Question.fromMap(listcache[i].data()));
-      }
+          listcache = value.docs.toList(),
+        });
+    for (int i = 0; i < listcache.length; i++) {
+      list.add(Question.fromMap(listcache[i].data()));
+    }
     print(quiz.id);
     print('list lenght ' + list.length.toString());
     return list;
@@ -72,5 +72,29 @@ class DatabaseService {
       listQuiz.add(q);
     }
     return listQuiz;
+  }
+
+  //start with Result
+  Future addResult(Quiz quiz, Result result) async {
+    //get auto id for quiz
+    DocumentReference resultRef =
+        quizs.doc(quiz.id).collection('results').doc();
+    result.id = resultRef.id;
+    //add codQuiz into users code
+    await resultRef
+        .set(result.toMap())
+        .then((value) => print('add result completed'));
+  }
+
+  Future<Result> getReult(Quiz quiz, String userid) async {
+    Result result = Result(id: '', score: 0, times: 0, userid: userid);
+    await quizs
+        .doc(quiz.id)
+        .collection('results')
+        .where('userid', isEqualTo: userid)
+        .get()
+        .then((value) => result = Result.fromMap(value.docs.first.data()));
+    print('quiz id: ' + quiz.id);
+    return result;
   }
 }
