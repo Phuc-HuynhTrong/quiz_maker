@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:get/state_manager.dart';
 import 'package:quiz_maker/controllers/questionController.dart';
 import 'package:quiz_maker/models/Question.dart';
+import 'package:quiz_maker/models/Quiz.dart';
 class ProcessBar extends StatelessWidget {
   final List<Question> listQues;
-  ProcessBar({Key? key, required this.listQues}) : super(key: key);
+  final Quiz quiz;
+  ProcessBar({Key? key, required this.listQues, required this.quiz}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +22,7 @@ class ProcessBar extends StatelessWidget {
       child: GetBuilder<QuestionController>(
         init:  QuestionController(),
         builder: (controller) {
-          controller.creatQuestionList(listQues);
+          controller.creatQuestionList(listQues, quiz);
           return Stack(children: [
             LayoutBuilder(
               builder: (context, constraints) => Container(

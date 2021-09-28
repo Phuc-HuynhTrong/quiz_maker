@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:quiz_maker/models/Question.dart';
+import 'package:quiz_maker/models/Quiz.dart';
 import 'package:quiz_maker/screens/PLayQuiz/scorescreen.dart';
 
 class QuestionController extends GetxController
@@ -13,9 +14,9 @@ class QuestionController extends GetxController
   int numofCorrect = 0;
   bool isAnswer = false;
   int selectedOption = 0;
+  late int page = 0;
   // so that we can access our animation outside
   Animation get animation => this._animation;
-  late int page = 0;
   @override
   void onInit() {
     _animationController =
@@ -28,6 +29,7 @@ class QuestionController extends GetxController
     _animationController.forward().whenComplete(() => nextQuestion());
 
     pageController = PageController();
+
     super.onInit();
   }
 
@@ -41,12 +43,17 @@ class QuestionController extends GetxController
   void reSetAnimation() {
     _animationController.reset();
   }
-
-  void creatQuestionList(List<Question> list) {
+  late Quiz _quiz;
+  void creatQuestionList(List<Question> list, Quiz quiz) {
     this.listQues = list;
-    page = listQues.length;
+    this._quiz = quiz;
+    if(page == 0)
+    {
+      page =list.length;
+    }
   }
 
+  Quiz get quiz => this._quiz;
   void CheckAns(Question question, int selectedIndex) {
     selectedOption = selectedIndex;
     if (question.rightAnswer == selectedIndex) {
@@ -62,16 +69,19 @@ class QuestionController extends GetxController
   }
 
   void nextQuestion() {
-    if (page != -1) {
+    print('page ' + page.toString());
+    if (page != 1) {
       isAnswer = false;
       selectedOption = 0;
+      page = page -1;
       pageController.nextPage(
           duration: Duration(milliseconds: 250), curve: Curves.ease);
-      page -= 1;
       _animationController.reset();
       _animationController.forward().whenComplete(() => nextQuestion());
     }
-    Get.to(ScoreScreen());
+    else {
+      Get.to(ScoreScreen());
+    }
   }
   int get selected => this.selectedOption;
 }

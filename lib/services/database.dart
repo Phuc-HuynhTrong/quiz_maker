@@ -86,15 +86,27 @@ class DatabaseService {
         .then((value) => print('add result completed'));
   }
 
-  Future<Result> getReult(Quiz quiz, String userid) async {
-    Result result = Result(id: '', score: 0, times: 0, userid: userid);
+  Future<List<Result>> getReult(Quiz quiz, String userid) async {
+    List<Result> listRes = [];
     await quizs
         .doc(quiz.id)
         .collection('results')
         .where('userid', isEqualTo: userid)
         .get()
-        .then((value) => result = Result.fromMap(value.docs.first.data()));
+        .then((value) =>
+            {value.docs.map((e) => listRes.add(Result.fromMap(e.data())))});
     print('quiz id: ' + quiz.id);
-    return result;
+    return listRes;
+  }
+
+  Future<int> getTimes(Quiz quiz) async {
+    int times = 0;
+    await quizs
+        .doc(quiz.id)
+        .collection('results')
+        .where('userid', isEqualTo: uid)
+        .get()
+        .then((value) => times = value.docs.length);
+    return times;
   }
 }

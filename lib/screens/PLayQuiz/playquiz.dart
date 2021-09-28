@@ -31,6 +31,7 @@ class _PlayQuizState extends State<PlayQuiz> {
     return Scaffold(
         backgroundColor: Color(0xff1d2859),
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           backgroundColor: Color(0xff1d2859),
           actions: [
             TextButton(
@@ -57,6 +58,7 @@ class _PlayQuizState extends State<PlayQuiz> {
                     children: [
                       ProcessBar(
                         listQues: widget.listQuestion,
+                        quiz: widget.quiz,
                       ),
                       SizedBox(
                         height: 30,
