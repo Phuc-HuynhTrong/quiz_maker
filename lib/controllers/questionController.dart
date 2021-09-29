@@ -36,10 +36,11 @@ class QuestionController extends GetxController
   @override
   void onClose() {
     super.onClose();
+    _animationController.reset();
     _animationController.dispose();
     pageController.dispose();
+    print('close controller');
   }
-
   void reSetAnimation() {
     _animationController.reset();
   }
@@ -62,13 +63,12 @@ class QuestionController extends GetxController
     }
     _animationController.stop();
     update();
-
     Future.delayed(Duration(seconds: 2), () {
       nextQuestion();
     });
   }
 
-  void nextQuestion() {
+  Future<void> nextQuestion() async {
     print('page ' + page.toString());
     if (page != 1) {
       isAnswer = false;
@@ -80,8 +80,19 @@ class QuestionController extends GetxController
       _animationController.forward().whenComplete(() => nextQuestion());
     }
     else {
-      Get.to(ScoreScreen());
+      await Get.to(ScoreScreen());
+      setData();
+      numofCorrect = 0;
     }
+  }
+  void setData(){
+    _animationController.reset();
+    _animationController.forward();
+    pageController = new PageController();
+    selectedOption = 0;
+    isAnswer = false;
+    page = listQues.length;
+    print('set data controller');
   }
   int get selected => this.selectedOption;
 }
