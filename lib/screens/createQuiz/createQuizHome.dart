@@ -73,6 +73,7 @@ class _CreateQuizHomeState extends State<CreateQuizHome> {
                               ? Container(
                                   child: Image.file(
                                     File(imageFile.path),
+                                    fit: BoxFit.fill,
                                     height: 200,
                                     width:
                                         MediaQuery.of(context).size.width - 10,

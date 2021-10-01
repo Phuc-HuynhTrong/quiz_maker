@@ -61,15 +61,17 @@ class DatabaseService {
   }
 
   Future<List<Quiz>> getListQuizOfUser() async {
-    List<Quiz> listQuiz = [];
+    late List<Quiz> listQuiz = [];
     List<String> listIdCodeQuiz = [];
     await users.doc(uid).collection('codeQuizs').get().then((value) => {
-          value.docs
-              .map((e) => listIdCodeQuiz.add(e.data().entries.first.value))
+          value.docs.toList().forEach((element) {
+            listIdCodeQuiz.add(element.data()['code']);
+          })
         });
     for (int i = 0; i < listIdCodeQuiz.length; i++) {
-      Quiz q = getQuizByCode(listIdCodeQuiz[i]) as Quiz;
-      listQuiz.add(q);
+      await getQuizByCode(listIdCodeQuiz[i]).then((value) => {
+            listQuiz.add(value),
+          });
     }
     return listQuiz;
   }
