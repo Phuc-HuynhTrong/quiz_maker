@@ -22,7 +22,6 @@ class ProcessBar extends StatelessWidget {
       child: GetBuilder<QuestionController>(
         init:  QuestionController(),
         builder: (controller) {
-          controller.creatQuestionList(listQues, quiz);
           return Stack(children: [
             LayoutBuilder(
               builder: (context, constraints) => Container(

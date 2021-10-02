@@ -23,10 +23,12 @@ class _QuizOfUserState extends State<QuizOfUser> {
   AuthService authService = AuthService();
   late DatabaseService databaseService;
   Storage storage = new Storage();
-  List<List<Question>> listQuestion = [[]];
+  List<List<Question>> listQuestion = [];
   List<Uint8List> listImage = [];
   bool isLoadingImage = false;
   bool isLoadingQues = false;
+
+
   Future<void> getData() async {
     isLoadingImage = true;
     isLoadingQues = true;
@@ -34,6 +36,7 @@ class _QuizOfUserState extends State<QuizOfUser> {
         .getListQuizOfUser()
         .then((value) => listQuiz = value)
         .whenComplete(() => {
+          print('list quiz leng: '+ listQuiz.length.toString()),
               for (int i = 0; i < listQuiz.length; i++)
                 {
                   getQuestionList(i),
@@ -69,6 +72,7 @@ class _QuizOfUserState extends State<QuizOfUser> {
     setState(() {
       isLoadingQues = false;
     });
+    print('list ques leng ' + listQuestion[0].length.toString());
   }
 
   @override

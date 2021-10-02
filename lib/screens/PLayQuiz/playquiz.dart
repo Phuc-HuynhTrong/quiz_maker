@@ -27,7 +27,8 @@ class _PlayQuizState extends State<PlayQuiz> {
 
   @override
   Widget build(BuildContext context) {
-    QuestionController questionController = Get.put(QuestionController());
+    QuestionController questionController = Get.put(new QuestionController());
+    questionController.creatQuestionList(list, widget.quiz);
     return Scaffold(
         backgroundColor: Color(0xff1d2859),
         appBar: AppBar(

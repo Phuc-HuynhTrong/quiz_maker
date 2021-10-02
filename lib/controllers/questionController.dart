@@ -48,10 +48,7 @@ class QuestionController extends GetxController
   void creatQuestionList(List<Question> list, Quiz quiz) {
     this.listQues = list;
     this._quiz = quiz;
-    if(page == 0)
-    {
-      page =list.length;
-    }
+    page =list.length;
   }
 
   Quiz get quiz => this._quiz;
@@ -91,7 +88,6 @@ class QuestionController extends GetxController
     pageController = new PageController();
     selectedOption = 0;
     isAnswer = false;
-    page = listQues.length;
     print('set data controller');
   }
   int get selected => this.selectedOption;
