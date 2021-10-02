@@ -27,8 +27,7 @@ class _QuizOfUserState extends State<QuizOfUser> {
   List<Uint8List> listImage = [];
   bool isLoadingImage = false;
   bool isLoadingQues = false;
-
-
+  bool synchronized = false;
   Future<void> getData() async {
     isLoadingImage = true;
     isLoadingQues = true;
@@ -36,11 +35,14 @@ class _QuizOfUserState extends State<QuizOfUser> {
         .getListQuizOfUser()
         .then((value) => listQuiz = value)
         .whenComplete(() => {
-          print('list quiz leng: '+ listQuiz.length.toString()),
+              print('list quiz leng: ' + listQuiz.length.toString()),
               for (int i = 0; i < listQuiz.length; i++)
                 {
-                  getQuestionList(i),
-                  getImage(i),
+                  if (!synchronized)
+                    {
+                      if (listQuestion.length != i + 1) getQuestionList(i),
+                      if (listImage.length != i + 1) getImage(i),
+                    }
                 }
             });
   }
@@ -60,8 +62,14 @@ class _QuizOfUserState extends State<QuizOfUser> {
         .then((value) => listImage.add(value))
         .whenComplete(() => print('get image completed'));
     setState(() {
-      isLoadingImage = false;
+      if (listQuestion.length == index + 1 && listImage.length == index + 1)
+        synchronized = true;
     });
+    if (index == listQuiz.length - 1) {
+      setState(() {
+        isLoadingImage = false;
+      });
+    }
   }
 
   Future<void> getQuestionList(int index) async {
@@ -70,8 +78,13 @@ class _QuizOfUserState extends State<QuizOfUser> {
         .then((value) => listQuestion.add(value))
         .whenComplete(() => print('getQuestion completed'));
     setState(() {
-      isLoadingQues = false;
+      if (listQuestion.length == index + 1 && listImage.length == index + 1)
+        synchronized = true;
     });
+    if (index == listQuiz.length - 1)
+      setState(() {
+        isLoadingQues = false;
+      });
     print('list ques leng ' + listQuestion[0].length.toString());
   }
 
@@ -80,31 +93,28 @@ class _QuizOfUserState extends State<QuizOfUser> {
     return Scaffold(
         backgroundColor: Color(0xff1d2859),
         appBar: AppBar(
-          leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: Icon(
-              Icons.arrow_back,
-              color: Colors.blue,
-            ),
-          ),
-          backgroundColor: Color(0xff1d2859),
-          elevation: 0.0,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
           centerTitle: true,
-          title: Container(
-              child: Column(
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              appBar(context),
-              Text(
-                'Your quizs',
-                style: Theme.of(context)
-                    .textTheme
-                    .headline6!
-                    .copyWith(color: Colors.white),
-              )
+              Container(
+                  child: Column(
+                children: [
+                  appBar(context),
+                  Text(
+                    'Your quizs',
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline6!
+                        .copyWith(color: Colors.white),
+                  )
+                ],
+              )),
             ],
-          )),
+          ),
         ),
         body: isLoadingImage || isLoadingQues
             ? Container(
@@ -120,10 +130,12 @@ class _QuizOfUserState extends State<QuizOfUser> {
                           height: 100,
                           width: MediaQuery.of(context).size.width - 100,
                           decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: MemoryImage(listImage[index]),
-                              fit: BoxFit.fill,
-                            ),
+                            image: listImage.length-1 < index
+                                ? null
+                                : DecorationImage(
+                                    image: MemoryImage(listImage[index]),
+                                    fit: BoxFit.fill,
+                                  ),
                             border: Border.all(color: Colors.white, width: 1),
                             borderRadius: BorderRadius.circular(25),
                           ),

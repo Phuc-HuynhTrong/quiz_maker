@@ -41,7 +41,14 @@ class _EnterCodeScreenState extends State<EnterCodeScreen> {
         ),
         backgroundColor: Colors.white,
         elevation: 0.0,
-        title: appBar(context),
+        centerTitle: true,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            appBar(context),
+          ],
+        ),
       ),
       body: Container(
         child: Center(

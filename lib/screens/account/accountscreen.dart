@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quiz_maker/screens/account/quizsofuser.dart';
 import 'package:quiz_maker/screens/athentication/signin.dart';
 import 'package:quiz_maker/services/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -43,7 +44,7 @@ class _AccountScreenState extends State<AccountScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      user != null ?user.displayName.toString(): "",
+                      user != null ? user.displayName.toString() : "",
                       style: TextStyle(color: Colors.black, fontSize: 20),
                     )
                   ],
@@ -57,7 +58,7 @@ class _AccountScreenState extends State<AccountScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      user != null ?user.email.toString():'your email',
+                      user != null ? user.email.toString() : 'your email',
                       style: TextStyle(color: Colors.black, fontSize: 20),
                     )
                   ],
@@ -86,23 +87,14 @@ class _AccountScreenState extends State<AccountScreen> {
                   height: 50,
                   width: double.infinity,
                   child: TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => QuizOfUser()));
+                      },
                       child: Text(
                         'Your quizs',
-                        style: TextStyle(color: Colors.blue[900], fontSize: 20),
-                      ))),
-              SizedBox(
-                height: 5,
-              ),
-              Container(
-                  color: Colors.blue[100],
-                  margin: EdgeInsets.symmetric(horizontal: 10),
-                  height: 50,
-                  width: double.infinity,
-                  child: TextButton(
-                      onPressed: () {},
-                      child: Text(
-                        'Quiz comleted',
                         style: TextStyle(color: Colors.blue[900], fontSize: 20),
                       ))),
               SizedBox(
@@ -129,11 +121,12 @@ class _AccountScreenState extends State<AccountScreen> {
                   width: double.infinity,
                   child: TextButton(
                       onPressed: () async {
-                        await  _authService.signout();
-                        Navigator.pushReplacement(context,
-                          MaterialPageRoute (
-                            builder: (BuildContext context) => const SignInScreen()
-                          ),
+                        await _authService.signout();
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  const SignInScreen()),
                         );
                       },
                       child: Text(
