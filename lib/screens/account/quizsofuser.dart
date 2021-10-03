@@ -27,7 +27,6 @@ class _QuizOfUserState extends State<QuizOfUser> {
   List<Uint8List> listImage = [];
   bool isLoadingImage = false;
   bool isLoadingQues = false;
-  bool synchronized = false;
   Future<void> getData() async {
     isLoadingImage = true;
     isLoadingQues = true;
@@ -36,13 +35,13 @@ class _QuizOfUserState extends State<QuizOfUser> {
         .then((value) => listQuiz = value)
         .whenComplete(() => {
               print('list quiz leng: ' + listQuiz.length.toString()),
+              listImage =
+                  new List.filled(listQuiz.length, Uint8List.fromList([0])),
+              listQuestion = new List.filled(listQuiz.length, []),
               for (int i = 0; i < listQuiz.length; i++)
                 {
-                  if (!synchronized)
-                    {
-                      if (listQuestion.length != i + 1) getQuestionList(i),
-                      if (listImage.length != i + 1) getImage(i),
-                    }
+                  getQuestionList(i),
+                  getImage(i),
                 }
             });
   }
@@ -57,31 +56,27 @@ class _QuizOfUserState extends State<QuizOfUser> {
   }
 
   Future<void> getImage(int index) async {
-    await storage
-        .loadImages(listQuiz[index].imageURL)
-        .then((value) => listImage.add(value))
-        .whenComplete(() => print('get image completed'));
-    setState(() {
-      if (listQuestion.length == index + 1 && listImage.length == index + 1)
-        synchronized = true;
-    });
-    if (index == listQuiz.length - 1) {
-      setState(() {
-        isLoadingImage = false;
-      });
+    try {
+      await storage
+          .loadImages(listQuiz[index].imageURL)
+          .then((value) => listImage[index] = value)
+          .whenComplete(() => print('get image completed'));
+      if (listImage[listQuiz.length - 1] != Uint8List.fromList([0])) {
+        setState(() {
+          isLoadingImage = false;
+        });
+      }
+    } catch (e) {
+      print(e);
     }
   }
 
   Future<void> getQuestionList(int index) async {
     await databaseService
         .getQuestionsbyQuizid(listQuiz[index])
-        .then((value) => listQuestion.add(value))
+        .then((value) => listQuestion[index] = value)
         .whenComplete(() => print('getQuestion completed'));
-    setState(() {
-      if (listQuestion.length == index + 1 && listImage.length == index + 1)
-        synchronized = true;
-    });
-    if (index == listQuiz.length - 1)
+    if (listQuestion[listQuiz.length - 1] != [])
       setState(() {
         isLoadingQues = false;
       });
@@ -130,7 +125,8 @@ class _QuizOfUserState extends State<QuizOfUser> {
                           height: 100,
                           width: MediaQuery.of(context).size.width - 100,
                           decoration: BoxDecoration(
-                            image: listImage.length-1 < index
+                            image: listImage[index].toString() ==
+                                    Uint8List.fromList([0]).toString()
                                 ? null
                                 : DecorationImage(
                                     image: MemoryImage(listImage[index]),
