@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:quiz_maker/screens/home/home.dart';
 import 'package:quiz_maker/screens/athentication/signup.dart';
 import 'package:quiz_maker/services/auth.dart';
+import 'package:quiz_maker/widgets/InputDercoration.dart';
 import 'package:quiz_maker/widgets/appbar.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:quiz_maker/widgets/auth_error.dart';
@@ -73,30 +74,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       validator: (val) {
                         return val!.isEmpty ? 'Enter your email' : null;
                       },
-                      decoration: InputDecoration(
-                        labelText: 'Email',
-                        labelStyle: TextStyle(color: Colors.white),
-                        hintStyle: TextStyle(
-                          color: Color(0xff94fc03),
-                        ),
-                        border: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.red, width: 2)),
-                        enabledBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.white, width: 2)),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Color(0xff94fc03), width: 2)),
-                        errorBorder: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.red, width: 2)),
-                        errorStyle: Theme.of(context)
-                            .textTheme
-                            .subtitle1!
-                            .copyWith(
-                            color: Colors.red, fontWeight: FontWeight.w500),
-                      ),
+                      decoration: inputDecoration('Email', context),
                       onChanged: (val) {
                         email = val;
                       },
@@ -109,27 +87,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         validator: (val) {
                           return val!.isEmpty ? 'Enter your password' : null;
                         },
-                        decoration: InputDecoration(
-                          labelText: 'Password',
-                          labelStyle: TextStyle(color: Colors.white),
-                          border: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.red, width: 2)),
-                          enabledBorder: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.white, width: 2)),
-                          focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: Color(0xff94fc03), width: 2)),
-                          errorBorder: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.red, width: 2)),
-                          errorStyle: Theme.of(context)
-                              .textTheme
-                              .subtitle1!
-                              .copyWith(
-                              color: Colors.red, fontWeight: FontWeight.w500),
-                        ),
+                        decoration: inputDecoration('Password', context),
                         onChanged: (val) {
                           password = val;
                         },
@@ -151,7 +109,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           'Sign in',
                           style: TextStyle(
                               color: Colors.white,
-                              fontSize: 16,
+                              fontSize: 18,
                               fontWeight: FontWeight.w500),
                         ),
                         onPressed: () async {

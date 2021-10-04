@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:quiz_maker/screens/home/home.dart';
 import 'package:quiz_maker/screens/athentication/signin.dart';
 import 'package:quiz_maker/services/auth.dart';
+import 'package:quiz_maker/widgets/InputDercoration.dart';
 import 'package:quiz_maker/widgets/appbar.dart';
 import 'package:quiz_maker/widgets/auth_error.dart';
 
@@ -30,66 +31,37 @@ class _SignUpScreenState extends State<SignUpScreen> {
         key: _formKey,
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
+          child: ListView(
+            reverse: true,
             children: [
-              Spacer(),
-              TextFormField(
-                validator: (val) {
-                  return val!.isEmpty ? 'Enter your name' : null;
-                },
-                decoration: InputDecoration(
-                  hintText: 'Name',
-                ),
-                onChanged: (val) {
-                  name = val;
-                },
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              TextFormField(
-                validator: (val) {
-                  return val!.isEmpty ? 'Enter your email' : null;
-                },
-                decoration: InputDecoration(
-                  hintText: 'Email',
-                ),
-                onChanged: (val) {
-                  email = val;
-                },
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              TextFormField(
-                validator: (val) {
-                  return val!.isEmpty ? 'Enter your password' : null;
-                },
-                decoration: InputDecoration(
-                  hintText: 'Password',
-                ),
-                onChanged: (val) {
-                  password = val;
-                },
-                obscureText: true,
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              TextFormField(
-                validator: (val) {
-                  return val!.isEmpty ? 'Confirm your password' : null;
-                },
-                decoration: InputDecoration(
-                  hintText: 'Confirm password',
-                ),
-                onChanged: (val) {
-                  confirmpass = val;
-                },
-                obscureText: true,
-              ),
-              SizedBox(
-                height: 5,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Already have an account? ",
+                    style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500),
+                  ),
+                  TextButton(
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                              const SignInScreen(),
+                            ));
+                      },
+                      child: Text(
+                        "Sign in",
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            decoration: TextDecoration.underline,
+                            fontWeight: FontWeight.w800),
+                      ))
+                ],
               ),
               Container(
                 width: MediaQuery.of(context).size.width - 40,
@@ -109,9 +81,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   onPressed: () async {
                     final res = await _authService.signUpWithEmailAndPass(email, password, name);
                     if(res != "sign up")
-                      {
-                        await showAlertDialog(context);
-                      }
+                    {
+                      await showAlertDialog(context);
+                    }
                     else {
                       Navigator.pushReplacement(
                           context,
@@ -123,34 +95,58 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
               ),
               SizedBox(
+                height: 30,
+              ),
+              TextFormField(
+                validator: (val) {
+                  return val!.isEmpty ? 'Confirm your password' : null;
+                },
+                decoration: inputDecoration('Confirm your password', context),
+                onChanged: (val) {
+                  confirmpass = val;
+                },
+                obscureText: true,
+              ),
+              SizedBox(
                 height: 5,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Already have an account? ",
-                    style: TextStyle(fontSize: 16),
-                  ),
-                  TextButton(
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  const SignInScreen(),
-                            ));
-                      },
-                      child: Text(
-                        "Sign in",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
-                          decoration: TextDecoration.underline,
-                        ),
-                      ))
-                ],
-              )
+              TextFormField(
+                validator: (val) {
+                  return val!.isEmpty ? 'Enter your password' : null;
+                },
+                decoration: inputDecoration("Password", context),
+                onChanged: (val) {
+                  password = val;
+                },
+                obscureText: true,
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              TextFormField(
+                validator: (val) {
+                  return val!.isEmpty ? 'Enter your name' : null;
+                },
+                decoration: inputDecoration('Name', context),
+                onChanged: (val) {
+                  name = val;
+                },
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              TextFormField(
+                validator: (val) {
+                  return val!.isEmpty ? 'Enter your email' : null;
+                },
+                decoration: inputDecoration("Email", context),
+                onChanged: (val) {
+                  email = val;
+                },
+              ),
+              SizedBox(
+                height: 5,
+              ),
             ],
           ),
         ),
