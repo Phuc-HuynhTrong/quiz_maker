@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quiz_maker/screens/account/quizsofuser.dart';
+import 'package:quiz_maker/screens/account/userinformation.dart';
 import 'package:quiz_maker/screens/athentication/signin.dart';
 import 'package:quiz_maker/services/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -73,7 +74,13 @@ class _AccountScreenState extends State<AccountScreen> {
                   height: 50,
                   width: double.infinity,
                   child: TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => InformationScreen(
+                                )));
+                      },
                       child: Text(
                         'Your imformation',
                         style: TextStyle(color: Colors.blue[900], fontSize: 20),

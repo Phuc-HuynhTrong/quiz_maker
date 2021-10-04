@@ -120,54 +120,60 @@ class _QuizOfUserState extends State<QuizOfUser> {
                 itemBuilder: (context, index) {
                   return Row(
                     children: [
-                      Container(
-                          margin: EdgeInsets.fromLTRB(10, 20, 10, 0),
-                          height: 100,
-                          width: MediaQuery.of(context).size.width - 100,
-                          decoration: BoxDecoration(
-                            image: listImage[index].toString() ==
-                                    Uint8List.fromList([0]).toString()
-                                ? null
-                                : DecorationImage(
-                                    image: MemoryImage(listImage[index]),
-                                    fit: BoxFit.fill,
-                                  ),
-                            border: Border.all(color: Colors.white, width: 1),
-                            borderRadius: BorderRadius.circular(25),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Container(
-                                    width:
-                                        MediaQuery.of(context).size.width - 102,
-                                    decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.only(
-                                            bottomRight: Radius.circular(25),
-                                            bottomLeft: Radius.circular(25))),
-                                    child: Container(
-                                      margin: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                      child: Text(
-                                        listQuiz[index].title,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline6!
-                                            .copyWith(color: Color(0xffe41ceb)),
-                                      ),
+                      MaterialButton(
+                        onPressed: (){
+
+                        },
+                        child: Container(
+                            margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                            height: 100,
+                            width: MediaQuery.of(context).size.width - 120,
+                            decoration: BoxDecoration(
+                              image: listImage[index].toString() ==
+                                      Uint8List.fromList([0]).toString()
+                                  ? null
+                                  : DecorationImage(
+                                      image: MemoryImage(listImage[index]),
+                                      fit: BoxFit.fill,
                                     ),
-                                  )
-                                ],
-                              ),
-                            ],
-                          )),
+                              border: Border.all(color: Colors.white, width: 1),
+                              borderRadius: BorderRadius.circular(25),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Container(
+                                      width:
+                                          MediaQuery.of(context).size.width - 122,
+                                      decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.only(
+                                              bottomRight: Radius.circular(25),
+                                              bottomLeft: Radius.circular(25))),
+                                      child: Container(
+                                        margin: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                                        child: Text(
+                                          listQuiz[index].title,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline6!
+                                              .copyWith(color: Color(0xffe41ceb)),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ],
+                            )),
+                      ),
                       Container(
                           margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
-                          height: 80,
+                          height: 70,
+                          width: 70,
                           decoration: BoxDecoration(
                               color: Color(0xfffaf8aa),
                               border: Border.all(
@@ -189,7 +195,7 @@ class _QuizOfUserState extends State<QuizOfUser> {
                                 'Start',
                                 style: Theme.of(context)
                                     .textTheme
-                                    .headline5!
+                                    .headline6!
                                     .copyWith(color: Colors.black87),
                               ))),
                     ],
