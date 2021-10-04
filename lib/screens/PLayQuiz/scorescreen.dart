@@ -45,7 +45,7 @@ class _ScoreScreenState extends State<ScoreScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xff1d2859),
+      backgroundColor: Color(0xff09103b),
       body: Container(
         child: Column(
           children: [

@@ -86,7 +86,7 @@ class _QuizOfUserState extends State<QuizOfUser> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color(0xff1d2859),
+        backgroundColor: Color(0xff09103b),
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,

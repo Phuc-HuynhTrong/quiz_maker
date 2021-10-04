@@ -18,7 +18,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xff09103b),
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: appBar(context),
         elevation: 0.0,
         backgroundColor: Colors.transparent,

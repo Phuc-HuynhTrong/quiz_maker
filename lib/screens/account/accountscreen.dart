@@ -21,8 +21,9 @@ class _AccountScreenState extends State<AccountScreen> {
       builder: (context, snapshot) {
         User? user = snapshot.data as User;
         return Container(
-          color: Colors.white,
-          child: Column(
+          color: Color(0xff09103b),
+          child: ListView(
+            padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
             children: [
               SizedBox(
                 height: 30,
@@ -46,7 +47,7 @@ class _AccountScreenState extends State<AccountScreen> {
                   children: [
                     Text(
                       user != null ? user.displayName.toString() : "",
-                      style: TextStyle(color: Colors.black, fontSize: 20),
+                      style: TextStyle(color: Colors.white, fontSize: 20),
                     )
                   ],
                 ),
@@ -60,7 +61,7 @@ class _AccountScreenState extends State<AccountScreen> {
                   children: [
                     Text(
                       user != null ? user.email.toString() : 'your email',
-                      style: TextStyle(color: Colors.black, fontSize: 20),
+                      style: TextStyle(color: Colors.white, fontSize: 20),
                     )
                   ],
                 ),
@@ -69,7 +70,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 height: 30,
               ),
               Container(
-                  color: Colors.blue[100],
+                  //color: Colors.blue[100],
                   margin: EdgeInsets.symmetric(horizontal: 10),
                   height: 50,
                   width: double.infinity,
@@ -83,13 +84,14 @@ class _AccountScreenState extends State<AccountScreen> {
                       },
                       child: Text(
                         'Your imformation',
-                        style: TextStyle(color: Colors.blue[900], fontSize: 20),
+                        style: TextStyle(color: Colors.white, fontSize: 20),
                       ))),
-              SizedBox(
-                height: 5,
+              Divider(
+                color: Colors.white,
+                thickness: 2,
               ),
               Container(
-                  color: Colors.blue[100],
+                  //color: Colors.blue[100],
                   margin: EdgeInsets.symmetric(horizontal: 10),
                   height: 50,
                   width: double.infinity,
@@ -102,13 +104,14 @@ class _AccountScreenState extends State<AccountScreen> {
                       },
                       child: Text(
                         'Your quizs',
-                        style: TextStyle(color: Colors.blue[900], fontSize: 20),
+                        style: TextStyle(color: Colors.white, fontSize: 20),
                       ))),
-              SizedBox(
-                height: 5,
+              Divider(
+                color: Colors.white,
+                thickness: 2,
               ),
               Container(
-                  color: Colors.blue[100],
+                  //color: Colors.blue[100],
                   margin: EdgeInsets.symmetric(horizontal: 10),
                   height: 50,
                   width: double.infinity,
@@ -116,13 +119,14 @@ class _AccountScreenState extends State<AccountScreen> {
                       onPressed: () {},
                       child: Text(
                         'Change password',
-                        style: TextStyle(color: Colors.blue[900], fontSize: 20),
+                        style: TextStyle(color: Colors.white, fontSize: 20),
                       ))),
-              SizedBox(
-                height: 5,
+              Divider(
+                color: Colors.white,
+                thickness: 2,
               ),
               Container(
-                  color: Colors.blue[100],
+                  //color: Colors.blue[100],
                   margin: EdgeInsets.symmetric(horizontal: 10),
                   height: 50,
                   width: double.infinity,
@@ -138,8 +142,12 @@ class _AccountScreenState extends State<AccountScreen> {
                       },
                       child: Text(
                         'Sign out',
-                        style: TextStyle(color: Colors.blue[900], fontSize: 20),
+                        style: TextStyle(color: Colors.white, fontSize: 20),
                       ))),
+              Divider(
+                color: Colors.white,
+                thickness: 2,
+              ),
             ],
           ),
         );

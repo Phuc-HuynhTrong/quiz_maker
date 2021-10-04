@@ -30,10 +30,10 @@ class _PlayQuizState extends State<PlayQuiz> {
     QuestionController questionController = Get.put(new QuestionController());
     questionController.creatQuestionList(list, widget.quiz);
     return Scaffold(
-        backgroundColor: Color(0xff1d2859),
+        backgroundColor: Color(0xff09103b),
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          backgroundColor: Color(0xff1d2859),
+          backgroundColor: Color(0xff09103b),
           actions: [
             TextButton(
               onPressed: () {

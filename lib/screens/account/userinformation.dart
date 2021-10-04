@@ -11,7 +11,7 @@ class InformationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final authService = AuthService();
     return Scaffold(
-      backgroundColor: Color(0xff1d2859),
+      backgroundColor: Color(0xff09103b),
       appBar: new AppBar(
         backgroundColor: Colors.transparent,
         centerTitle: true,
@@ -126,7 +126,7 @@ class InformationScreen extends StatelessWidget {
                                       .copyWith(color: Colors.white70),
                                 ),
                               ),
-                              
+
                             ),
                           ],
                         ),

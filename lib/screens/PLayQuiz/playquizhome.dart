@@ -15,7 +15,7 @@ class _PlayQuizScreenState extends State<PlayQuizScreen> {
     return Container(
       width: MediaQuery.of(context).size.width,
       alignment: Alignment.center,
-      color: Colors.blue[100],
+      color: Color(0xff09103b),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
