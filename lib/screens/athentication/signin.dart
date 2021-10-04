@@ -29,7 +29,7 @@ class _SignInScreenState extends State<SignInScreen> {
         isLoading = false;
       });
       if (res != 'sign in') {
-        await showAlertDialog(context);
+        await showAlertDialog(context,"Incorrect email or password");
       } else {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => Home()));
