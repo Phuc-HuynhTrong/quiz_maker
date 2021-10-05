@@ -7,6 +7,7 @@ import 'package:quiz_maker/screens/createQuiz/addquestions.dart';
 import 'package:quiz_maker/services/auth.dart';
 import 'package:quiz_maker/services/database.dart';
 import 'package:quiz_maker/services/storage.dart';
+import 'package:quiz_maker/widgets/auth_error.dart';
 
 class CreateQuizHome extends StatefulWidget {
   const CreateQuizHome({Key? key}) : super(key: key);
@@ -26,7 +27,7 @@ class _CreateQuizHomeState extends State<CreateQuizHome> {
   Storage storage = Storage();
   late String uid = '';
   late DatabaseService databaseService = DatabaseService(uid: uid);
-
+  final _formKey = GlobalKey<FormState>();
   @override
   void initState() {
     // TODO: implement initState
@@ -49,148 +50,204 @@ class _CreateQuizHomeState extends State<CreateQuizHome> {
       print(e);
     }
   }
-
+  addQuiz() async {
+    if(_formKey.currentState!.validate())
+      {
+        if(uploadImage == false)
+          {
+            await showAlertDialog(context,"Please upload image");
+          }
+        else if(listQuestion.length < 1){
+          await showAlertDialog(context,"Please add question");
+        }
+        else
+          {
+            Quiz quiz = Quiz(
+                id: '', code: code, imageURL: imageFile.path, title: title);
+            await databaseService.addQuiz(quiz);
+            storage.uploadImageToFirebase(File(imageFile.path));
+            final q = await databaseService.getQuizByCode(code);
+            for(int i = 0 ;i < listQuestion.length; i++)
+            {
+              databaseService.addQuestion(listQuestion[i], q.id);
+            }
+          }
+      }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.blue[100],
-      body: CustomScrollView(
-        slivers: <Widget>[
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
-                return Column(
-                  children: [
-                    GestureDetector(
-                      child: Container(
-                          height: 200,
-                          width: MediaQuery.of(context).size.width - 10,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(color: Colors.blue, width: 2),
-                          ),
-                          child: uploadImage
-                              ? Container(
-                                  child: Image.file(
-                                    File(imageFile.path),
-                                    fit: BoxFit.fill,
-                                    height: 200,
-                                    width:
-                                        MediaQuery.of(context).size.width - 10,
-                                  ),
-                                )
-                              : Center(
-                                  child: Text(
-                                  'Upload image of quiz',
-                                  style: TextStyle(
-                                      color: Colors.blue[900], fontSize: 25),
-                                ))),
-                      onTap: () {
-                        _onImageButtonPressed(ImageSource.gallery,
-                            context: context);
-                      },
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Container(
-                      height: 40,
-                      width: MediaQuery.of(context).size.width - 10,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(color: Colors.blue, width: 2),
+      backgroundColor: Color(0xff09103b),
+      body: Form(
+        key: _formKey,
+        child: CustomScrollView(
+          slivers: <Widget>[
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (BuildContext context, int index) {
+                  return Column(
+                    children: [
+                      GestureDetector(
+                        child: Container(
+                            height: 200,
+                            width: MediaQuery.of(context).size.width - 10,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              border: Border.all(color: Colors.blue, width: 2),
+                            ),
+                            child: uploadImage
+                                ? Container(
+                                    child: Image.file(
+                                      File(imageFile.path),
+                                      fit: BoxFit.fill,
+                                      height: 200,
+                                      width:
+                                          MediaQuery.of(context).size.width - 10,
+                                    ),
+                                  )
+                                : Center(
+                                    child: Text(
+                                    'Upload image of quiz',
+                                    style: TextStyle(
+                                        color: Colors.blue[900], fontSize: 25),
+                                  ))),
+                        onTap: () {
+                          _onImageButtonPressed(ImageSource.gallery,
+                              context: context);
+                        },
                       ),
-                      child: TextFormField(
+                      SizedBox(
+                        height: 10,
+                      ),
+                      TextFormField(
+                        cursorColor: Colors.white,
                         minLines: 1,
-                        maxLines: 1,
                         decoration: InputDecoration(
-                            hintText: 'Enter title of quiz',
-                            hintStyle:
-                                TextStyle(color: Colors.black38, fontSize: 20)),
+                          hintText: 'Enter title of quiz',
+                          hintStyle: TextStyle(
+                              fontSize: 20, color: Colors.grey[400]),
+                          border: OutlineInputBorder(
+                            borderSide:
+                            BorderSide(color: Colors.white, width: 2),
+                          ),
+                          errorBorder: OutlineInputBorder(
+                              borderSide:
+                              BorderSide(color: Colors.red, width: 2)),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide:
+                              BorderSide(color: Colors.white, width: 2)),
+                          enabledBorder: OutlineInputBorder(
+                              borderSide:
+                              BorderSide(color: Colors.white, width: 2)),
+                        ),
                         onChanged: (val) {
                           title = val;
                         },
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                        ),
+                        validator: (val){
+                          if(title.length > 100) return "Title is so long";
+                          return val!.isEmpty ? 'Enter title of quiz' : null;
+                        },
                       ),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Container(
-                      height: 40,
-                      width: MediaQuery.of(context).size.width - 10,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(color: Colors.blue, width: 2),
+                      SizedBox(
+                        height: 10,
                       ),
-                      child: TextFormField(
+                      TextFormField(
+                        cursorColor: Colors.white,
                         minLines: 1,
                         maxLines: 1,
                         decoration: InputDecoration(
-                            hintText: 'Enter code of quiz',
-                            hintStyle:
-                                TextStyle(color: Colors.black38, fontSize: 20)),
+                          hintText: 'Enter code of quiz',
+                          hintStyle: TextStyle(
+                              fontSize: 20, color: Colors.grey[400]),
+                          border: OutlineInputBorder(
+                            borderSide:
+                            BorderSide(color: Colors.white, width: 2),
+                          ),
+                          errorBorder: OutlineInputBorder(
+                              borderSide:
+                              BorderSide(color: Colors.red, width: 2)),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide:
+                              BorderSide(color: Colors.white, width: 2)),
+                          enabledBorder: OutlineInputBorder(
+                              borderSide:
+                              BorderSide(color: Colors.white, width: 2)),
+                        ),
                         onChanged: (val) {
                           code = val;
                         },
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                        ),
+                        validator: (val){
+                          if(code.length < 4) return "Code must longer than 3 digits";
+                          if(code.length > 8) return "Code must shorter than 9 digits";
+                          return val!.isEmpty?"Enter code" :null;
+                        },
                       ),
-                    ),
-                    SizedBox(
-                      height: 30,
-                    )
-                  ],
+                      SizedBox(
+                        height: 30,
+                      )
+                    ],
+                  );
+                },
+                childCount: 1,
+              ),
+            ),
+            SliverList(
+                delegate: SliverChildBuilderDelegate(
+              (BuildContext context, int index) {
+                return Container(
+                  alignment: Alignment.center,
+                  child: Column(
+                    mainAxisAlignment:  MainAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          MaterialButton(
+                            onPressed: () {},
+                            child: Container(
+                                margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                                padding: EdgeInsets.all(5),
+                                height: 60,
+                                width: MediaQuery.of(context).size.width - 80,
+                                decoration: BoxDecoration(
+                                    color: Colors.blue[500],
+                                    border: Border.all(
+                                        color: Colors.white, width: 2)),
+                                child: Text(
+                                  'Question ' +
+                                      (index + 1 ).toString() +
+                                      ' :' +
+                                      listQuestion[index].question.toString(),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 20,
+                                  ),
+                                )),
+                          ),
+                          IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  listQuestion.removeAt(index);
+                                });
+                              },
+                              icon: Icon(Icons.clear, color: Colors.white,))
+                        ],
+                      ),
+                    ],
+                  ),
                 );
               },
-              childCount: 1,
-            ),
-          ),
-          SliverList(
-              delegate: SliverChildBuilderDelegate(
-            (BuildContext context, int index) {
-              return Container(
-                alignment: Alignment.center,
-                color: Colors.blue[100],
-                child: Column(
-                  children: [
-                    Row(
-                      children: [
-                        MaterialButton(
-                          onPressed: () {},
-                          child: Container(
-                              margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                              padding: EdgeInsets.all(1),
-                              height: 60,
-                              width: MediaQuery.of(context).size.width - 80,
-                              decoration: BoxDecoration(
-                                  color: Colors.blue[700],
-                                  border: Border.all(
-                                      color: Colors.white, width: 2)),
-                              child: Text(
-                                'Question ' +
-                                    (index + 1 ).toString() +
-                                    ' :' +
-                                    listQuestion[index].question.toString(),
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                ),
-                              )),
-                        ),
-                        IconButton(
-                            onPressed: () {
-                              setState(() {
-                                listQuestion.removeAt(index);
-                              });
-                            },
-                            icon: Icon(Icons.clear))
-                      ],
-                    ),
-                  ],
-                ),
-              );
-            },
-            childCount: listQuestion.length,
-          )),
-        ],
+              childCount: listQuestion.length,
+            )),
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         elevation: 1,
@@ -230,17 +287,7 @@ class _CreateQuizHomeState extends State<CreateQuizHome> {
             border: Border.all(color: Colors.blue, width: 3)),
         child: TextButton(
           onPressed: () async {
-            Quiz quiz = Quiz(
-                id: '', code: code, imageURL: imageFile.path, title: title);
-            await databaseService.addQuiz(quiz);
-            storage.uploadImageToFirebase(File(imageFile.path));
-            final q = await databaseService.getQuizByCode(code);
-            print('code ne nha: ' + code);
-            print('q ne nha : ' + q.code.toString());
-            for(int i = 0 ;i < listQuestion.length; i++)
-              {
-                databaseService.addQuestion(listQuestion[i], q.id);
-              }
+            await addQuiz();
           },
           child: Text(
             'Add quiz',

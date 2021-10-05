@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:quiz_maker/services/auth.dart';
 import 'package:quiz_maker/widgets/appbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:provider/provider.dart';
+
 
 class InformationScreen extends StatelessWidget {
   InformationScreen({Key? key}) : super(key: key);

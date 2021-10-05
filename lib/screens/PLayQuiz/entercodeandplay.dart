@@ -107,6 +107,7 @@ class _EnterCodeScreenState extends State<EnterCodeScreen> {
                               )
                             : Row(),
                         TextFormField(
+                          cursorColor: Colors.white,
                           style: TextStyle(
                             fontSize: 20,
                             color: Colors.white,
