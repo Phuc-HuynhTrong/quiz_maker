@@ -80,12 +80,11 @@ class _AddQuestionScreenState extends State<AddQuestionScreen> {
                       fontSize: 20,
                       color: Colors.white,
                     ),
-                    minLines: 5,
-                    maxLines: 5,
-                    //maxLength: 200,
                     validator: (val) {
                       return val!.isEmpty ? 'Enter question' : null;
                     },
+                    minLines: 4,
+                    maxLines: 5,
                     decoration: InputDecoration(
                       hintText: 'Question',
                       hintStyle: TextStyle(
@@ -192,8 +191,6 @@ class _AddQuestionScreenState extends State<AddQuestionScreen> {
                               fontSize: 16,
                               color: Colors.white,
                             ),
-                            minLines: 5,
-                            maxLines: 5,
                             validator: (val) {
                               return val!.isEmpty ? 'Enter option 2' : null;
                             },
@@ -250,8 +247,6 @@ class _AddQuestionScreenState extends State<AddQuestionScreen> {
                               fontSize: 16,
                               color: Colors.white,
                             ),
-                            minLines: 5,
-                            maxLines: 5,
                             validator: (val) {
                               return val!.isEmpty ? 'Enter option 3' : null;
                             },
@@ -308,8 +303,6 @@ class _AddQuestionScreenState extends State<AddQuestionScreen> {
                               fontSize: 16,
                               color: Colors.white,
                             ),
-                            minLines: 5,
-                            maxLines: 5,
                             validator: (val) {
                               return val!.isEmpty ? 'Enter option 4' : null;
                             },
@@ -368,12 +361,9 @@ class _AddQuestionScreenState extends State<AddQuestionScreen> {
                       border: Border.all(color: Colors.white, width: 1)),
                   child: TextFormField(
                     style: TextStyle(fontSize: 16, color: Colors.white),
-                    minLines: 5,
-                    maxLines: 5,
-                    //smaxLength: 200,
                     validator: (val) {
                       // ignore: unrelated_type_equality_checks
-                      if (val != "1" || val != "2" || val != "3" || val != "4")
+                      if (val != "1" && val != "2" && val != "3" && val != "4")
                         return 'Write the correct answer';
                       return val!.isEmpty ? 'Write the right answer' : null;
                     },
@@ -388,7 +378,7 @@ class _AddQuestionScreenState extends State<AddQuestionScreen> {
                         borderRadius: BorderRadius.circular(25),
                       ),
                       focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white, width: 2),
+                        borderSide: BorderSide(color: Colors.transparent, width: 2),
                         borderRadius: BorderRadius.circular(25),
                       ),
                       errorBorder: OutlineInputBorder(),

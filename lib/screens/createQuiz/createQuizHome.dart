@@ -17,6 +17,8 @@ class CreateQuizHome extends StatefulWidget {
 }
 
 class _CreateQuizHomeState extends State<CreateQuizHome> {
+  final fieldText1 = TextEditingController();
+  final fieldText2 = TextEditingController();
   List<Question> listQuestion = <Question>[];
   late String code = '';
   late String title = '';
@@ -71,6 +73,14 @@ class _CreateQuizHomeState extends State<CreateQuizHome> {
             {
               databaseService.addQuestion(listQuestion[i], q.id);
             }
+            setState(() {
+              uploadImage = false;
+              listQuestion = <Question>[];
+              code = '';
+              title = '';
+              fieldText1.clear();
+              fieldText2.clear();
+            });
           }
       }
   }
@@ -92,8 +102,8 @@ class _CreateQuizHomeState extends State<CreateQuizHome> {
                             height: 200,
                             width: MediaQuery.of(context).size.width - 10,
                             decoration: BoxDecoration(
-                              color: Colors.white,
-                              border: Border.all(color: Colors.blue, width: 2),
+                              color: Colors.black54,
+                              border: Border.all(color: Colors.white, width: 2),
                             ),
                             child: uploadImage
                                 ? Container(
@@ -109,7 +119,7 @@ class _CreateQuizHomeState extends State<CreateQuizHome> {
                                     child: Text(
                                     'Upload image of quiz',
                                     style: TextStyle(
-                                        color: Colors.blue[900], fontSize: 25),
+                                        color: Colors.white, fontSize: 25),
                                   ))),
                         onTap: () {
                           _onImageButtonPressed(ImageSource.gallery,
@@ -120,6 +130,7 @@ class _CreateQuizHomeState extends State<CreateQuizHome> {
                         height: 10,
                       ),
                       TextFormField(
+                        controller: fieldText1,
                         cursorColor: Colors.white,
                         minLines: 1,
                         decoration: InputDecoration(
@@ -156,6 +167,7 @@ class _CreateQuizHomeState extends State<CreateQuizHome> {
                         height: 10,
                       ),
                       TextFormField(
+                        controller: fieldText2,
                         cursorColor: Colors.white,
                         minLines: 1,
                         maxLines: 1,
@@ -217,7 +229,7 @@ class _CreateQuizHomeState extends State<CreateQuizHome> {
                                 height: 60,
                                 width: MediaQuery.of(context).size.width - 80,
                                 decoration: BoxDecoration(
-                                    color: Colors.blue[500],
+                                    color: Colors.blue[900],
                                     border: Border.all(
                                         color: Colors.white, width: 2)),
                                 child: Text(
@@ -282,6 +294,7 @@ class _CreateQuizHomeState extends State<CreateQuizHome> {
         )),
       ),
       bottomNavigationBar: Container(
+        margin: EdgeInsets.all(20),
         decoration: BoxDecoration(
             color: Colors.white,
             border: Border.all(color: Colors.blue, width: 3)),
