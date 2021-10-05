@@ -50,10 +50,10 @@ class _QuestionCardState extends State<QuestionCard> {
             ),
             ...List.generate(
                 4,
-                (index) => Option(
+                (index) => OptionView(
                     index: index + 1,
                     ques: ques,
-                    press: () => controller.CheckAns(ques, index+1))),
+                    press: () => controller.checkAns(ques, index+1))),
           ],
         ),
       ),

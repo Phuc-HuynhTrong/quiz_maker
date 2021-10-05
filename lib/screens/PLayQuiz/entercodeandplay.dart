@@ -26,9 +26,38 @@ class _EnterCodeScreenState extends State<EnterCodeScreen> {
     super.initState();
   }
 
+  play() async {
+    if(_formKey.currentState!.validate())
+      {
+        Quiz quz =
+            await databaseService.getQuizByCode(code);
+        if (quz.id != '') {
+          List<Question> listQuestion = [];
+          listQuestion = await databaseService
+              .getQuestionsbyQuizid(quz);
+          print(listQuestion.length);
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) =>
+                  PlayQuiz(
+                    quiz: quz,
+                    listQuestion: listQuestion,
+                  ),
+            ),
+          );
+        } else {
+          setState(() {
+            note = 'Code does not exist';
+          });
+        }
+      }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xff09103b),
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
@@ -39,7 +68,7 @@ class _EnterCodeScreenState extends State<EnterCodeScreen> {
             color: Colors.blue,
           ),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.transparent,
         elevation: 0.0,
         centerTitle: true,
         title: Row(
@@ -56,7 +85,6 @@ class _EnterCodeScreenState extends State<EnterCodeScreen> {
             key: _formKey,
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 60),
-              color: Colors.blue[100],
               child: Column(
                 children: [
                   Expanded(
@@ -78,66 +106,52 @@ class _EnterCodeScreenState extends State<EnterCodeScreen> {
                                 ),
                               )
                             : Row(),
-                        Container(
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              border:
-                                  Border.all(color: Colors.black, width: 1.5)),
-                          child: Container(
-                            margin: EdgeInsets.all(10),
-                            child: TextFormField(
-                              style: TextStyle(
-                                fontSize: 20,
-                              ),
-                              maxLength: 10,
-                              validator: (val) {
-                                return val!.isEmpty ? 'Enter Code' : null;
-                              },
-                              decoration: InputDecoration(
-                                hintText: 'Code Quiz',
-                                hintStyle: TextStyle(
-                                    fontSize: 20, color: Colors.grey[400]),
-                              ),
-                              onChanged: (val) {
-                                val.toUpperCase();
-                                code = val;
-                              },
-                            ),
+                        TextFormField(
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.white,
                           ),
+                          validator: (val) {
+                            return val!.isEmpty ? 'Enter Code' : null;
+                          },
+                          decoration: InputDecoration(
+                            hintText: 'Code Quiz',
+                            hintStyle: TextStyle(
+                                fontSize: 20, color: Colors.grey[400]),
+                            border: OutlineInputBorder(
+                                borderSide:
+                                BorderSide(color: Colors.white, width: 2),
+                            ),
+                            errorBorder: OutlineInputBorder(
+                                borderSide:
+                                BorderSide(color: Colors.red, width: 2)),
+                            focusedBorder: OutlineInputBorder(
+                                borderSide:
+                                BorderSide(color: Colors.white, width: 2)),
+                            enabledBorder: OutlineInputBorder(
+                                borderSide:
+                                BorderSide(color: Colors.white, width: 2)),
+                          ),
+                          onChanged: (val) {
+                            val.toUpperCase();
+                            code = val;
+                          },
                         ),
                         SizedBox(
-                          height: 10,
+                          height: 30,
                         ),
                         Container(
+                          width: MediaQuery.of(context).size.width/2,
                           decoration: BoxDecoration(
                               color: Colors.blue[400],
                               border:
-                                  Border.all(color: Colors.black, width: 1.0)),
+                                  Border.all(color: Colors.lightBlueAccent, width: 1.0),
+                          ),
+
                           child: TextButton(
                               autofocus: true,
                               onPressed: () async {
-                                Quiz quz =
-                                    await databaseService.getQuizByCode(code);
-                                if (quz.id != '') {
-                                  List<Question> listQuestion = [];
-                                  listQuestion = await databaseService
-                                      .getQuestionsbyQuizid(quz);
-                                  print(listQuestion.length);
-                                  Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          PlayQuiz(
-                                        quiz: quz,
-                                        listQuestion: listQuestion,
-                                      ),
-                                    ),
-                                  );
-                                } else {
-                                  setState(() {
-                                    note = 'code does not exist';
-                                  });
-                                }
+                                play();
                               },
                               child: Text(
                                 'Play',

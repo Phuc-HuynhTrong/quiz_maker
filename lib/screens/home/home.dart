@@ -49,6 +49,7 @@ class _HomeState extends State<Home> {
                   : AccountScreen(),
         ),
         bottomNavigationBar: BottomNavigationBar(
+          backgroundColor: Colors.transparent,
           type: BottomNavigationBarType.fixed,
           items: [
             BottomNavigationBarItem(
@@ -56,25 +57,26 @@ class _HomeState extends State<Home> {
                 icon: Icon(
               Icons.play_circle_fill,
               size: 30,
-              color: Colors.blue,
+              //color: Colors.white,
             )),
             BottomNavigationBarItem(
                 label: 'Create quiz',
                 icon: Icon(
                   Icons.add_circle_outlined,
                   size: 30,
-                  color: Colors.blue,
+                 // color: Colors.white,
                 )),
             BottomNavigationBarItem(
-                label: 'Your information',
+                label: 'Account',
                 icon: Icon(
                   Icons.account_circle,
                   size: 30,
-                  color: Colors.blue,
+                  //color: Colors.white,
                 )),
           ],
           currentIndex: index,
-          selectedItemColor: Colors.blue,
+          selectedItemColor: Colors.white,
+          unselectedItemColor: Colors.grey[500],
           onTap: onTapedTap,
         ));
   }

@@ -52,7 +52,7 @@ class QuestionController extends GetxController
   }
 
   Quiz get quiz => this._quiz;
-  void CheckAns(Question question, int selectedIndex) {
+  void checkAns(Question question, int selectedIndex) {
     selectedOption = selectedIndex;
     if (question.rightAnswer == selectedIndex) {
       isAnswer = true;

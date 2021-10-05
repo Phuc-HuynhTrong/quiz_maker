@@ -4,15 +4,13 @@ import 'package:quiz_maker/controllers/questionController.dart';
 import 'package:get/get.dart';
 import 'package:quiz_maker/models/Question.dart';
 
-class Option extends StatelessWidget {
+class OptionView extends StatelessWidget {
   final int index;
   final Question ques;
   final VoidCallback press;
-  Color correct = Color(0xFF50de2c);
-  Color incorrect = Color(0xFFeb1515);
-  late int selected = 0;
-  late int right;
-  Option(
+  final Color correct = Color(0xFF50de2c);
+  final Color incorrect = Color(0xFFeb1515);
+  OptionView(
       {Key? key, required this.index, required this.ques, required this.press})
       : super(key: key);
 
