@@ -6,7 +6,7 @@ InputDecoration inputDecoration(String label, BuildContext context){
         color: Colors.white, fontWeight: FontWeight.w500),
     border: UnderlineInputBorder(
         borderSide:
-        BorderSide(color: Colors.red, width: 2)),
+        BorderSide(color: Colors.white, width: 2)),
     enabledBorder: UnderlineInputBorder(
         borderSide:
         BorderSide(color: Colors.white, width: 2)),
