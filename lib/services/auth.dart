@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthService {
   FirebaseAuth _auth = FirebaseAuth.instance;
-  Stream<User?> streamUser()   {
+  Stream<User?> streamUser() {
     try {
       _auth.authStateChanges().listen((User? user) {
         if (user == null) {
@@ -16,8 +16,10 @@ class AuthService {
     }
     return _auth.authStateChanges();
   }
+
   User? get getCurrentUser => _auth.currentUser;
-  Future signUpWithEmailAndPass(String email, String password, String name) async {
+  Future signUpWithEmailAndPass(
+      String email, String password, String name) async {
     try {
       await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
@@ -39,12 +41,30 @@ class AuthService {
   }
 
   Future signInWithEmailAndPass(String email, String password) async {
-    try{
+    try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
       return "sign in";
-    }
-    catch(e){
+    } catch (e) {
       print('error' + e.toString());
+    }
+  }
+
+  Future changePassword(
+      String? email, String currentlyPass, String newpass) async {
+    try {
+      AuthCredential credential = EmailAuthProvider.credential(
+          email: email.toString(), password: currentlyPass);
+      await _auth.currentUser!.reauthenticateWithCredential(credential);
+      _auth.currentUser!.updatePassword(newpass);
+      return ("Update password completed");
+    } catch (e) {}
+  }
+
+  Future resetPassword(email) async {
+    try {
+      return await _auth.sendPasswordResetEmail(email: email);
+    } on FirebaseAuthException catch (e) {
+      return e.code;
     }
   }
 }

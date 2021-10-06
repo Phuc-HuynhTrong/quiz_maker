@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-Future<void> showAlertDialog(BuildContext context, String text) async {
+Future<void> showConfirm(BuildContext context, String text) async {
   return showDialog<void>(
     context: context,
     barrierDismissible: false, // user must tap button!
@@ -13,10 +13,10 @@ Future<void> showAlertDialog(BuildContext context, String text) async {
             //padding: EdgeInsets.all(10),
             width: MediaQuery.of(context).size.width / 1.8,
             decoration: BoxDecoration(
-              color: Colors.red,
+              color: Colors.green,
               borderRadius: BorderRadius.circular(5),
               border: Border.all(
-                  color: Colors.yellow, width: 3),
+                  color: Colors.green, width: 3),
             ),
             child: Container(
               padding: EdgeInsets.all(10),
@@ -24,7 +24,7 @@ Future<void> showAlertDialog(BuildContext context, String text) async {
                 color:  Color(0xff09103b),
                 borderRadius: BorderRadius.circular(5),
                 border: Border.all(
-                    color: Colors.red, width: 2),
+                    color: Colors.green, width: 2),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -38,7 +38,7 @@ Future<void> showAlertDialog(BuildContext context, String text) async {
                       style: Theme.of(context)
                           .textTheme
                           .headline6!
-                          .copyWith(color: Colors.redAccent),
+                          .copyWith(color: Colors.green),
                       textAlign: TextAlign.center,
                     ),
                   ),

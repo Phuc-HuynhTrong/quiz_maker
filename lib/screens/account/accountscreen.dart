@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quiz_maker/screens/account/changepasswordscreen.dart';
 import 'package:quiz_maker/screens/account/quizsofuser.dart';
 import 'package:quiz_maker/screens/account/userinformation.dart';
 import 'package:quiz_maker/screens/athentication/signin.dart';
@@ -64,7 +65,7 @@ class _AccountScreenState extends State<AccountScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            user.email.toString() ,
+                            user.email.toString(),
                             style: TextStyle(color: Colors.white, fontSize: 20),
                           )
                         ],
@@ -122,7 +123,13 @@ class _AccountScreenState extends State<AccountScreen> {
                         height: 50,
                         width: double.infinity,
                         child: TextButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          ChangePasswordScreen(user: user,)));
+                            },
                             child: Text(
                               'Change password',
                               style:
