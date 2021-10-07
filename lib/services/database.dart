@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:quiz_maker/models/Code.dart';
 import 'package:quiz_maker/models/Question.dart';
 import 'package:quiz_maker/models/Quiz.dart';
 import 'package:quiz_maker/models/result.dart';
@@ -13,6 +14,7 @@ class DatabaseService {
   final CollectionReference quizs =
       FirebaseFirestore.instance.collection('quizs');
 
+  //Quiz
   Future addQuiz(Quiz quiz) async {
     //get auto id for quiz
     DocumentReference quizRef = quizs.doc();
@@ -22,18 +24,9 @@ class DatabaseService {
         .set(quiz.toMap())
         .then((value) => print('add quizcode completed'));
     DocumentReference codeRef = users.doc(uid).collection('codeQuizs').doc();
-    await codeRef
-        .set(quiz.toMapCode())
-        .then((value) => print('add code to users'));
-  }
-
-  Future addQuestion(Question question, String idQuiz) async {
-    DocumentReference quesRef = quizs.doc(idQuiz).collection('questions').doc();
-    question.id = quesRef.id;
-    await quesRef
-        .set(question.toMap())
-        .then((value) => print('add question completed'))
-        .catchError((error) => print(error));
+    var code = Code(id: "", code: quiz.code);
+    code.id = codeRef.id;
+    await codeRef.set(code.toMap()).then((value) => print('add code to users'));
   }
 
   Future<Quiz> getQuizByCode(String code) async {
@@ -44,6 +37,40 @@ class DatabaseService {
         });
     print('quiz id: ' + quiz.id);
     return quiz;
+  }
+
+  Future deleteQuiz(Quiz quiz, String uid, List<Question> listQues) async {
+    listQues.forEach((element) {
+      quizs.doc(quiz.id).collection('questions').doc(element.id).delete();
+    });
+    List<Result> listResult = [];
+    await getListResultOfQuiz(quiz, uid).then(
+      (value) => listResult = value,
+    );
+    listResult.forEach((element) {
+      quizs.doc(quiz.id).collection('results').doc(element.id).delete();
+    });
+    await quizs.doc(quiz.id).delete();
+    Code c = Code(id: "", code: "");
+    await users
+        .doc(uid)
+        .collection('codeQuizs')
+        .where('code', isEqualTo: quiz.code)
+        .get()
+        .then((value) => c = Code.fromMap(value.docs.first.data()));
+    print(c.id);
+    await users.doc(uid).collection('codeQuizs').doc(c.id).delete();
+    return "deleted quiz";
+  }
+
+  //Question
+  Future addQuestion(Question question, String idQuiz) async {
+    DocumentReference quesRef = quizs.doc(idQuiz).collection('questions').doc();
+    question.id = quesRef.id;
+    await quesRef
+        .set(question.toMap())
+        .then((value) => print('add question completed'))
+        .catchError((error) => print(error));
   }
 
   Future<List<Question>> getQuestionsbyQuizid(Quiz quiz) async {
@@ -112,7 +139,7 @@ class DatabaseService {
     return times;
   }
 
-  Future<List<Result>> getListUserPlayQuiz(Quiz quiz, String userid) async {
+  Future<List<Result>> getListResultOfQuiz(Quiz quiz, String userid) async {
     List<Result> listRes = [];
     await quizs.doc(quiz.id).collection('results').get().then((value) =>
         {value.docs.map((e) => listRes.add(Result.fromMap(e.data())))});

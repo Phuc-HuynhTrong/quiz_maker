@@ -1,10 +1,10 @@
-
 import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:quiz_maker/models/Question.dart';
 import 'package:quiz_maker/models/Quiz.dart';
 import 'package:quiz_maker/screens/PLayQuiz/playquiz.dart';
+import 'package:quiz_maker/screens/account/quizInformation.dart';
 import 'package:quiz_maker/services/auth.dart';
 import 'package:quiz_maker/services/database.dart';
 import 'package:quiz_maker/services/storage.dart';
@@ -120,8 +120,15 @@ class _QuizOfUserState extends State<QuizOfUser> {
                   return Row(
                     children: [
                       MaterialButton(
-                        onPressed: (){
-
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => quizInformation(
+                                        quiz: listQuiz[index],
+                                        listQuestion: listQuestion[index],
+                                        userId: authService.getCurrentUser!.uid,
+                                      )));
                         },
                         child: Container(
                             margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
@@ -146,21 +153,23 @@ class _QuizOfUserState extends State<QuizOfUser> {
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
                                     Container(
-                                      width:
-                                          MediaQuery.of(context).size.width - 122,
+                                      width: MediaQuery.of(context).size.width -
+                                          122,
                                       decoration: BoxDecoration(
                                           color: Colors.white,
                                           borderRadius: BorderRadius.only(
                                               bottomRight: Radius.circular(25),
                                               bottomLeft: Radius.circular(25))),
                                       child: Container(
-                                        margin: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                                        margin:
+                                            EdgeInsets.fromLTRB(20, 0, 0, 0),
                                         child: Text(
                                           listQuiz[index].title,
                                           style: Theme.of(context)
                                               .textTheme
                                               .headline6!
-                                              .copyWith(color: Color(0xffe41ceb)),
+                                              .copyWith(
+                                                  color: Color(0xffe41ceb)),
                                         ),
                                       ),
                                     )
