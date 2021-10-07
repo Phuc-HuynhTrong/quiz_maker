@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quiz_maker/screens/athentication/forgotpasswordscreen.dart';
 import 'package:quiz_maker/screens/home/home.dart';
 import 'package:quiz_maker/screens/athentication/signup.dart';
 import 'package:quiz_maker/services/auth.dart';
@@ -29,7 +30,7 @@ class _SignInScreenState extends State<SignInScreen> {
         isLoading = false;
       });
       if (res != 'sign in') {
-        await showAlertDialog(context,"Incorrect email or password");
+        await showAlertDialog(context, "Incorrect email or password");
       } else {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => Home()));
@@ -117,36 +118,59 @@ class _SignInScreenState extends State<SignInScreen> {
                         },
                       ),
                     ),
-                    SizedBox(
-                      height: 10,
-                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
-                          "Don't have an account?",
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500),
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  "Don't have an account?",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                TextButton(
+                                    onPressed: () {
+                                      Navigator.pushReplacement(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (BuildContext context) =>
+                                                const SignUpScreen(),
+                                          ));
+                                    },
+                                    child: Text(
+                                      "Sign up",
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                          decoration: TextDecoration.underline,
+                                          fontWeight: FontWeight.w800),
+                                    ))
+                              ],
+                            ),
+                            MaterialButton(
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            ForgotPasswordScreen()));
+                              },
+                              child: Text(
+                                "Forget password",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 15,
+                                    decoration: TextDecoration.underline,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                          ],
                         ),
-                        TextButton(
-                            onPressed: () {
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        const SignUpScreen(),
-                                  ));
-                            },
-                            child: Text(
-                              "Sign up",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  decoration: TextDecoration.underline,
-                                  fontWeight: FontWeight.w800),
-                            ))
                       ],
                     )
                   ],
