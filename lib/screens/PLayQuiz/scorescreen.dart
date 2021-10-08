@@ -18,9 +18,10 @@ class ScoreScreen extends StatefulWidget {
 class _ScoreScreenState extends State<ScoreScreen> {
   late QuestionController questionController = Get.put(QuestionController());
   late AuthService authService = AuthService();
-  late String userid = authService.getCurrentUser!.uid;
-  late DatabaseService databaseService = DatabaseService(uid: userid);
-  late Result result = Result(id: '', score: 0, times: 0, userid: userid);
+  late var user = authService.getCurrentUser;
+  late DatabaseService databaseService = DatabaseService(uid: user!.uid);
+  late Result result =
+      Result(name: '', id: '', score: 0, times: 0, userid: user!.uid);
   Future<void> creatAndUploadData() async {
     dynamic time = 0;
     await databaseService.getTimes(questionController.quiz).then((value) => {
@@ -28,10 +29,11 @@ class _ScoreScreenState extends State<ScoreScreen> {
         });
     setState(() {
       result = Result(
+          name: user!.displayName.toString(),
           id: '',
           score: questionController.numofCorrect,
           times: time! + 1,
-          userid: userid);
+          userid: user!.uid);
     });
     databaseService.addResult(questionController.quiz, result);
   }
@@ -130,7 +132,6 @@ class _ScoreScreenState extends State<ScoreScreen> {
                               margin: EdgeInsets.fromLTRB(20, 40, 0, 0),
                               child: TextButton(
                                   onPressed: () {
-
                                     Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(

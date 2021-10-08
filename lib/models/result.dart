@@ -3,7 +3,9 @@ class Result {
   int times;
   String userid;
   int score;
+  String name;
   Result({
+    required this.name,
     required this.id,
     required this.score,
     required this.times,
@@ -12,6 +14,7 @@ class Result {
 
   Map<String, dynamic> toMap() {
     return {
+      'name': name,
       'score': score,
       'times': times,
       'userid': userid,
@@ -20,6 +23,7 @@ class Result {
 
   factory Result.fromMap(Map<String, dynamic> data) {
     return Result(
+        name: data['name'],
         id: data['id'],
         score: data['score'],
         times: data['times'],

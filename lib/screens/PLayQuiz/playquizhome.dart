@@ -34,7 +34,7 @@ class _PlayQuizScreenState extends State<PlayQuizScreen> {
                                 QuizOfUser()));
                   },
                   child: Text(
-                    'Play your quiz',
+                    'Your quiz',
                     style: TextStyle(
                         fontSize: 20,
                         color: Colors.blue,

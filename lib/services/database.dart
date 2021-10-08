@@ -141,9 +141,11 @@ class DatabaseService {
 
   Future<List<Result>> getListResultOfQuiz(Quiz quiz, String userid) async {
     List<Result> listRes = [];
-    await quizs.doc(quiz.id).collection('results').get().then((value) =>
-        {value.docs.map((e) => listRes.add(Result.fromMap(e.data())))});
-    print('quiz id: ' + quiz.id);
+    await quizs.doc(quiz.id).collection('results').get().then((value) => {
+          value.docs.toList().forEach((element) {
+            listRes.add(Result.fromMap(element.data()));
+          }),
+        });
     return listRes;
   }
 }
