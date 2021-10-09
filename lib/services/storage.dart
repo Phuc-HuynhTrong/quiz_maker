@@ -27,4 +27,16 @@ class Storage {
     //print(url);
     return url;
   }
+
+  Future<Uint8List> deleteImages(String path) async {
+    print(path);
+    path = 'images' + path;
+    print(path);
+    final firebase_storage.Reference ref =
+    firebase_storage.FirebaseStorage.instance.ref().child(path);
+    var url;
+    await ref.delete();
+    //print(url);
+    return url;
+  }
 }

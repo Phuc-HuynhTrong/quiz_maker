@@ -8,6 +8,7 @@ import 'package:quiz_maker/services/auth.dart';
 import 'package:quiz_maker/services/database.dart';
 import 'package:quiz_maker/services/storage.dart';
 import 'package:quiz_maker/widgets/auth_error.dart';
+import 'package:quiz_maker/widgets/notice_confirm.dart';
 
 class CreateQuizHome extends StatefulWidget {
   const CreateQuizHome({Key? key}) : super(key: key);
@@ -66,21 +67,28 @@ class _CreateQuizHomeState extends State<CreateQuizHome> {
           {
             Quiz quiz = Quiz(
                 id: '', code: code, imageURL: imageFile.path, title: title);
-            await databaseService.addQuiz(quiz);
-            storage.uploadImageToFirebase(File(imageFile.path));
-            final q = await databaseService.getQuizByCode(code);
-            for(int i = 0 ;i < listQuestion.length; i++)
-            {
-              databaseService.addQuestion(listQuestion[i], q.id);
+            var re = await databaseService.addQuiz(quiz);
+            if(re == "Code was uesd")
+              {
+                await  showAlertDialog(context,"Code was uesd");
+              }
+            else{
+              storage.uploadImageToFirebase(File(imageFile.path));
+              final q = await databaseService.getQuizByCode(code);
+              for(int i = 0 ;i < listQuestion.length; i++)
+              {
+                databaseService.addQuestion(listQuestion[i], q.id);
+              }
+              setState(() {
+                uploadImage = false;
+                listQuestion = <Question>[];
+                code = '';
+                title = '';
+                fieldText1.clear();
+                fieldText2.clear();
+              });
+              await  showConfirm(context,"Successfully added quiz");
             }
-            setState(() {
-              uploadImage = false;
-              listQuestion = <Question>[];
-              code = '';
-              title = '';
-              fieldText1.clear();
-              fieldText2.clear();
-            });
           }
       }
   }

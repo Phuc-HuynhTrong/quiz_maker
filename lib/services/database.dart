@@ -19,6 +19,13 @@ class DatabaseService {
     //get auto id for quiz
     DocumentReference quizRef = quizs.doc();
     quiz.id = quizRef.id;
+    //check code of quiz was uesd or no;
+    Quiz checkQuiz = Quiz(id: '', code: '', imageURL: '', title: '');
+    await getQuizByCode(quiz.code).then((value) =>
+        checkQuiz = value,
+    );
+    if(checkQuiz.id != '')
+      return "Code was uesd";
     //add codQuiz into users code
     await quizRef
         .set(quiz.toMap())
@@ -30,6 +37,7 @@ class DatabaseService {
   }
 
   Future<Quiz> getQuizByCode(String code) async {
+    //get quiz when user enter code
     Quiz quiz = Quiz(id: '', code: '', imageURL: '', title: '');
     await quizs.where('code', isEqualTo: code).get().then((value) => {
           if (value.docs.isNotEmpty)
@@ -40,18 +48,24 @@ class DatabaseService {
   }
 
   Future deleteQuiz(Quiz quiz, String uid, List<Question> listQues) async {
+    //delete collection 'question' of quiz in firebase
     listQues.forEach((element) {
       quizs.doc(quiz.id).collection('questions').doc(element.id).delete();
     });
+    //get list result of quiz in firebase
     List<Result> listResult = [];
     await getListResultOfQuiz(quiz, uid).then(
       (value) => listResult = value,
     );
+    //delete collection 'results' of quiz in firebase
     listResult.forEach((element) {
       quizs.doc(quiz.id).collection('results').doc(element.id).delete();
     });
+    //delete quiz
     await quizs.doc(quiz.id).delete();
+    //get code of quiz in currently user
     Code c = Code(id: "", code: "");
+
     await users
         .doc(uid)
         .collection('codeQuizs')
@@ -59,6 +73,7 @@ class DatabaseService {
         .get()
         .then((value) => c = Code.fromMap(value.docs.first.data()));
     print(c.id);
+    //delete code in user data
     await users.doc(uid).collection('codeQuizs').doc(c.id).delete();
     return "deleted quiz";
   }

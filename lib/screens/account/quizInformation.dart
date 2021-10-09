@@ -6,6 +6,7 @@ import 'package:quiz_maker/models/result.dart';
 import 'package:quiz_maker/screens/PLayQuiz/optionview.dart';
 import 'package:quiz_maker/services/auth.dart';
 import 'package:quiz_maker/services/database.dart';
+import 'package:quiz_maker/services/storage.dart';
 
 class quizInformation extends StatefulWidget {
   final userId;
@@ -23,6 +24,7 @@ class _quizInformation extends State<quizInformation> {
   late Quiz quiz;
   late List<Question> listQues;
   AuthService authService = AuthService();
+  Storage storage = Storage();
   late DatabaseService databaseService;
   String uid = "";
   List<Result> listResults = [];
@@ -67,6 +69,7 @@ class _quizInformation extends State<quizInformation> {
           TextButton(
               onPressed: () {
                 databaseService.deleteQuiz(quiz, widget.userId, listQues);
+                storage.deleteImages(quiz.imageURL);
                 Navigator.pop(context);
                 //return 'delete quiz';
               },
