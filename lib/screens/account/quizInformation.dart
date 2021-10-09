@@ -25,7 +25,7 @@ class _quizInformation extends State<quizInformation> {
   AuthService authService = AuthService();
   late DatabaseService databaseService;
   String uid = "";
-  List<Result> lisResults = [];
+  List<Result> listResults = [];
   bool isLoading = false;
   bool isShowListQuestion = false;
   bool isShowListResult = false;
@@ -45,7 +45,7 @@ class _quizInformation extends State<quizInformation> {
       isLoading = true;
     });
     await databaseService.getListResultOfQuiz(quiz, uid).then((value) => {
-          lisResults = value,
+          listResults = value,
           complete = true,
         });
     if (complete) {
@@ -92,6 +92,32 @@ class _quizInformation extends State<quizInformation> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
+                        'Code: ',
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline6!
+                            .copyWith(color: Colors.white),
+                      ),
+                      Text(
+                        quiz.code.toString(),
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline6!
+                            .copyWith(color: Colors.white),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  height: 25,
+                  margin: EdgeInsets.symmetric(horizontal: 40, vertical: 20),
+                  decoration: BoxDecoration(
+                    color: Colors.transparent,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
                         'Num of questions: ',
                         style: Theme.of(context)
                             .textTheme
@@ -125,7 +151,7 @@ class _quizInformation extends State<quizInformation> {
                             .copyWith(color: Colors.white),
                       ),
                       Text(
-                        lisResults.length.toString(),
+                        listResults.length.toString(),
                         style: Theme.of(context)
                             .textTheme
                             .headline6!
@@ -256,7 +282,109 @@ class _quizInformation extends State<quizInformation> {
                           },
                         ),
                       )
-                    : Row()
+                    : Row(),
+                SizedBox(
+                  height: 10,
+                ),
+                MaterialButton(
+                  onPressed: () {
+                    setState(() {
+                      if (isShowListResult == true)
+                        isShowListResult = false;
+                      else
+                        isShowListResult = true;
+                    });
+                  },
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            'List results of all user ',
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline6!
+                                .copyWith(color: Colors.white),
+                          ),
+                          Icon(
+                            Icons.arrow_drop_down,
+                            color: Colors.white,
+                          )
+                        ],
+                      ),
+                      Divider(
+                        thickness: 2,
+                        color: Colors.white,
+                        indent: 100,
+                        endIndent: 100,
+                      )
+                    ],
+                  ),
+                ),
+                isShowListResult
+                    ? AnimatedContainer(
+                        margin: EdgeInsets.symmetric(horizontal: 20),
+                        duration: Duration(milliseconds: 300),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'Name',
+                              style: tst(context),
+                            ),
+                            Text(
+                              'Turn',
+                              style: tst(context),
+                            ),
+                            Text(
+                              'Score',
+                              style: tst(context),
+                            ),
+                          ],
+                        ),
+                      )
+                    : Row(),
+                isShowListResult
+                    ? AnimatedContainer(
+                        height: listResults.length * 60,
+                        duration: Duration(
+                          milliseconds: 500,
+                        ),
+                        curve: Curves.easeInToLinear,
+                        child: ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          itemCount: listResults.length,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                                title: Container(
+                              margin: EdgeInsets.symmetric(horizontal: 10),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    listResults[index].name,
+                                    style: tst(context),
+                                  ),
+                                  Text(
+                                    listResults[index].times.toString(),
+                                    style: tst(context),
+                                  ),
+                                  Text(
+                                    listResults[index].score.toString(),
+                                    style: tst(context),
+                                  ),
+                                ],
+                              ),
+                            ));
+                          },
+                        ),
+                      )
+                    : Row(),
               ],
             ),
     );
