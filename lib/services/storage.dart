@@ -14,22 +14,17 @@ class Storage {
   }
 
   Future<Uint8List> loadImages(String path) async {
-    print(path);
     path = 'images' + path;
-    print(path);
     final firebase_storage.Reference ref =
         firebase_storage.FirebaseStorage.instance.ref().child(path);
     var url;
     await ref
         .getData()
-        .then((value) => url = value)
-        .catchError((e) => print(e));
-    //print(url);
+        .then((value) => url = value);
     return url;
   }
 
   Future<Uint8List> deleteImages(String path) async {
-    print(path);
     path = 'images' + path;
     print(path);
     final firebase_storage.Reference ref =

@@ -175,6 +175,7 @@ class _CreateQuizHomeState extends State<CreateQuizHome> {
                         height: 10,
                       ),
                       TextFormField(
+                        autofocus: false,
                         controller: fieldText2,
                         cursorColor: Colors.white,
                         minLines: 1,

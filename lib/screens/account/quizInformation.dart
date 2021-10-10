@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:quiz_maker/models/Question.dart';
 import 'package:quiz_maker/models/Quiz.dart';
 import 'package:quiz_maker/models/result.dart';
-import 'package:quiz_maker/screens/PLayQuiz/optionview.dart';
 import 'package:quiz_maker/services/auth.dart';
 import 'package:quiz_maker/services/database.dart';
 import 'package:quiz_maker/services/storage.dart';
@@ -273,10 +272,39 @@ class _quizInformation extends State<quizInformation> {
                                         ),
                                         ...List.generate(
                                           4,
-                                          (x) => OptionView(
-                                              index: x + 1,
-                                              ques: listQues[index],
-                                              press: () {}),
+                                          (x) => Container(
+                                            padding: EdgeInsets.all(20),
+                                            decoration: BoxDecoration(
+                                                border: Border.all(
+                                                    color: Colors.black,
+                                                    width: 3),
+                                                borderRadius:
+                                                    BorderRadius.circular(25)),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(
+                                                  x == 0
+                                                      ? listQues[index].option1
+                                                      : x == 1
+                                                          ? listQues[index]
+                                                              .option2
+                                                          : x == 2
+                                                              ? listQues[index]
+                                                                  .option3
+                                                              : listQues[index]
+                                                                  .option4,
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .headline6!
+                                                      .copyWith(
+                                                          color: Colors.black),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
                                         )
                                       ],
                                     ),

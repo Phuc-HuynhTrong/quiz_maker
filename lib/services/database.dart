@@ -21,11 +21,10 @@ class DatabaseService {
     quiz.id = quizRef.id;
     //check code of quiz was uesd or no;
     Quiz checkQuiz = Quiz(id: '', code: '', imageURL: '', title: '');
-    await getQuizByCode(quiz.code).then((value) =>
-        checkQuiz = value,
+    await getQuizByCode(quiz.code).then(
+      (value) => checkQuiz = value,
     );
-    if(checkQuiz.id != '')
-      return "Code was uesd";
+    if (checkQuiz.id != '') return "Code was uesd";
     //add codQuiz into users code
     await quizRef
         .set(quiz.toMap())
@@ -43,7 +42,6 @@ class DatabaseService {
           if (value.docs.isNotEmpty)
             quiz = Quiz.fromMap(value.docs.first.data() as Map<String, dynamic>)
         });
-    print('quiz id: ' + quiz.id);
     return quiz;
   }
 
@@ -72,12 +70,37 @@ class DatabaseService {
         .where('code', isEqualTo: quiz.code)
         .get()
         .then((value) => c = Code.fromMap(value.docs.first.data()));
-    print(c.id);
     //delete code in user data
     await users.doc(uid).collection('codeQuizs').doc(c.id).delete();
     return "deleted quiz";
   }
 
+  Future<List<Quiz>> getListQuizOfUser() async {
+    late List<Quiz> listQuiz = [];
+    List<String> listIdCodeQuiz = [];
+    await users.doc(uid).collection('codeQuizs').get().then((value) => {
+          value.docs.toList().forEach((element) {
+            listIdCodeQuiz.add(element.data()['code']);
+          })
+        });
+    for (int i = 0; i < listIdCodeQuiz.length; i++) {
+      await getQuizByCode(listIdCodeQuiz[i]).then((value) => {
+            listQuiz.add(value),
+          });
+    }
+    return listQuiz;
+  }
+
+  Stream<List<Quiz>> streamQuiz(listIdCodeQuiz)  {
+    return quizs
+        .where('code', whereIn: listIdCodeQuiz)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((e) {
+        return Quiz.fromMap(e.data() as Map<String, dynamic>);
+      }).toList();
+    });
+  }
   //Question
   Future addQuestion(Question question, String idQuiz) async {
     DocumentReference quesRef = quizs.doc(idQuiz).collection('questions').doc();
@@ -97,25 +120,7 @@ class DatabaseService {
     for (int i = 0; i < listcache.length; i++) {
       list.add(Question.fromMap(listcache[i].data()));
     }
-    print(quiz.id);
-    print('list lenght ' + list.length.toString());
     return list;
-  }
-
-  Future<List<Quiz>> getListQuizOfUser() async {
-    late List<Quiz> listQuiz = [];
-    List<String> listIdCodeQuiz = [];
-    await users.doc(uid).collection('codeQuizs').get().then((value) => {
-          value.docs.toList().forEach((element) {
-            listIdCodeQuiz.add(element.data()['code']);
-          })
-        });
-    for (int i = 0; i < listIdCodeQuiz.length; i++) {
-      await getQuizByCode(listIdCodeQuiz[i]).then((value) => {
-            listQuiz.add(value),
-          });
-    }
-    return listQuiz;
   }
 
   //start with Result
@@ -139,7 +144,6 @@ class DatabaseService {
         .get()
         .then((value) =>
             {value.docs.map((e) => listRes.add(Result.fromMap(e.data())))});
-    print('quiz id: ' + quiz.id);
     return listRes;
   }
 

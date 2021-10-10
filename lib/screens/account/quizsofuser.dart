@@ -9,7 +9,6 @@ import 'package:quiz_maker/services/auth.dart';
 import 'package:quiz_maker/services/database.dart';
 import 'package:quiz_maker/services/storage.dart';
 import 'package:quiz_maker/widgets/appbar.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class QuizOfUser extends StatefulWidget {
   const QuizOfUser({Key? key}) : super(key: key);
@@ -23,64 +22,67 @@ class _QuizOfUserState extends State<QuizOfUser> {
   AuthService authService = AuthService();
   late DatabaseService databaseService;
   Storage storage = new Storage();
-  List<List<Question>> listQuestion = [];
-  List<Uint8List> listImage = [];
-  bool isLoadingImage = false;
-  bool isLoadingQues = false;
-  Future<void> getData() async {
-    isLoadingImage = true;
-    isLoadingQues = true;
+  List<List<Question>> listQuestion = new List.filled(100, []);
+  List<Uint8List> listImage = new List.filled(100, Uint8List.fromList([0]));
+  bool isLoadCode = false;
+  List<String> listCode = [];
+  @override
+  void initState() {
+    super.initState();
+    databaseService = DatabaseService(uid: authService.getCurrentUser!.uid);
+    getlistCode();
+  }
+
+  Future<void> getlistCode() async {
+    isLoadCode = true;
     await databaseService
         .getListQuizOfUser()
         .then((value) => listQuiz = value)
         .whenComplete(() => {
-              print('list quiz leng: ' + listQuiz.length.toString()),
-              listImage =
-                  new List.filled(listQuiz.length, Uint8List.fromList([0])),
-              listQuestion = new List.filled(listQuiz.length, []),
-              for (int i = 0; i < listQuiz.length; i++)
+              if (listQuiz.length == 0)
                 {
-                  getQuestionList(i),
-                  getImage(i),
+                  setIsLoadingCode(),
+                }
+              else
+                {
+                  for (int i = 0; i < listQuiz.length; i++)
+                    {
+                      listCode.add(listQuiz[i].code),
+                    },
+                  setIsLoadingCode()
                 }
             });
   }
 
-  @override
-  void initState() {
-    isLoadingImage = false;
-    isLoadingQues = false;
-    super.initState();
-    databaseService = DatabaseService(uid: authService.getCurrentUser!.uid);
-    getData();
+  void getData(List<Quiz> lq) {
+    for (int i = 0; i < lq.length; i++) {
+      getQuestionList(lq, i);
+      getImage(lq, i);
+    }
   }
 
-  Future<void> getImage(int index) async {
+  Future setIsLoadingCode() async {
+    setState(() {
+      isLoadCode = false;
+    });
+  }
+
+  Future<void> getImage(List<Quiz> lq, int index) async {
     try {
       await storage
-          .loadImages(listQuiz[index].imageURL)
+          .loadImages(lq[index].imageURL)
           .then((value) => listImage[index] = value)
           .whenComplete(() => print('get image completed'));
-      if (listImage[listQuiz.length - 1] != Uint8List.fromList([0])) {
-        setState(() {
-          isLoadingImage = false;
-        });
-      }
     } catch (e) {
       print(e);
     }
   }
 
-  Future<void> getQuestionList(int index) async {
+  Future<void> getQuestionList(List<Quiz> lq, int index) async {
     await databaseService
-        .getQuestionsbyQuizid(listQuiz[index])
+        .getQuestionsbyQuizid(lq[index])
         .then((value) => listQuestion[index] = value)
         .whenComplete(() => print('getQuestion completed'));
-    if (listQuestion[listQuiz.length - 1] != [])
-      setState(() {
-        isLoadingQues = false;
-      });
-    print('list ques leng ' + listQuestion[0].length.toString());
   }
 
   @override
@@ -111,104 +113,154 @@ class _QuizOfUserState extends State<QuizOfUser> {
             ],
           ),
         ),
-        body: isLoadingImage || isLoadingQues
+        body: isLoadCode
             ? Container(
                 child: Center(child: CircularProgressIndicator()),
               )
-            : ListView.builder(
-                itemCount: listQuiz.length,
-                itemBuilder: (context, index) {
-                  return Row(
-                    children: [
-                      MaterialButton(
-                        onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => quizInformation(
-                                        quiz: listQuiz[index],
-                                        listQuestion: listQuestion[index],
-                                        userId: authService.getCurrentUser!.uid,
-                                      )));
-                        },
-                        child: Container(
-                            margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
-                            height: 100,
-                            width: MediaQuery.of(context).size.width - 120,
-                            decoration: BoxDecoration(
-                              image: listImage[index].toString() ==
-                                      Uint8List.fromList([0]).toString()
-                                  ? null
-                                  : DecorationImage(
-                                      image: MemoryImage(listImage[index]),
-                                      fit: BoxFit.fill,
-                                    ),
-                              border: Border.all(color: Colors.white, width: 1),
-                              borderRadius: BorderRadius.circular(25),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.end,
+            : listCode.length == 0
+                ? Container(
+                    color: Colors.transparent,
+                  )
+                : StreamBuilder<List<Quiz>>(
+                    stream: databaseService.streamQuiz(listCode),
+                    builder: (context, snapshot) {
+                      List<Quiz> list = snapshot.data ?? [];
+                      getData(list);
+                      print("list l: " + list.length.toString());
+                      return listImage[list.length == 0 ? 0: list.length - 1] ==
+                              Uint8List.fromList([0])
+                          ? Container(
+                              child: Center(child: CircularProgressIndicator()),
+                            )
+                          : ListView.builder(
+                              itemCount: list.length,
+                              itemBuilder: (context, index) {
+                                return Row(
                                   children: [
-                                    Container(
-                                      width: MediaQuery.of(context).size.width -
-                                          122,
-                                      decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius: BorderRadius.only(
-                                              bottomRight: Radius.circular(25),
-                                              bottomLeft: Radius.circular(25))),
+                                    MaterialButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    quizInformation(
+                                                      quiz: list[index],
+                                                      listQuestion:
+                                                          listQuestion[index],
+                                                      userId: authService
+                                                          .getCurrentUser!.uid,
+                                                    )));
+                                      },
                                       child: Container(
+                                          margin:
+                                              EdgeInsets.fromLTRB(0, 20, 0, 0),
+                                          height: 100,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width -
+                                              120,
+                                          decoration: BoxDecoration(
+                                            image:
+                                                listImage[index].toString() ==
+                                                        Uint8List.fromList([0])
+                                                            .toString()
+                                                    ? null
+                                                    : DecorationImage(
+                                                        image: MemoryImage(
+                                                            listImage[index]),
+                                                        fit: BoxFit.fill,
+                                                      ),
+                                            border: Border.all(
+                                                color: Colors.white, width: 1),
+                                            borderRadius:
+                                                BorderRadius.circular(25),
+                                          ),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  Container(
+                                                    width:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .width -
+                                                            122,
+                                                    decoration: BoxDecoration(
+                                                        color: Colors.white,
+                                                        borderRadius:
+                                                            BorderRadius.only(
+                                                                bottomRight:
+                                                                    Radius
+                                                                        .circular(
+                                                                            25),
+                                                                bottomLeft: Radius
+                                                                    .circular(
+                                                                        25))),
+                                                    child: Container(
+                                                      margin:
+                                                          EdgeInsets.fromLTRB(
+                                                              20, 0, 0, 0),
+                                                      child: Text(
+                                                        list[index].title,
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .headline6!
+                                                            .copyWith(
+                                                                color: Color(
+                                                                    0xffe41ceb)),
+                                                      ),
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            ],
+                                          )),
+                                    ),
+                                    Container(
                                         margin:
-                                            EdgeInsets.fromLTRB(20, 0, 0, 0),
-                                        child: Text(
-                                          listQuiz[index].title,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline6!
-                                              .copyWith(
-                                                  color: Color(0xffe41ceb)),
-                                        ),
-                                      ),
-                                    )
+                                            EdgeInsets.fromLTRB(0, 20, 0, 0),
+                                        height: 70,
+                                        width: 70,
+                                        decoration: BoxDecoration(
+                                            color: Color(0xfffaf8aa),
+                                            border: Border.all(
+                                                color: Color(0xfff3fc38),
+                                                width: 3),
+                                            borderRadius:
+                                                BorderRadius.circular(25)),
+                                        child: TextButton(
+                                            onPressed: () async {
+                                              await getQuestionList(
+                                                  list, index);
+                                              Navigator.pushReplacement(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (BuildContext
+                                                            context) =>
+                                                        PlayQuiz(
+                                                            listQuestion:
+                                                                listQuestion[
+                                                                    index],
+                                                            quiz: list[index]),
+                                                  ));
+                                            },
+                                            child: Text(
+                                              'Start',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .headline6!
+                                                  .copyWith(
+                                                      color: Colors.black87),
+                                            ))),
                                   ],
-                                ),
-                              ],
-                            )),
-                      ),
-                      Container(
-                          margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
-                          height: 70,
-                          width: 70,
-                          decoration: BoxDecoration(
-                              color: Color(0xfffaf8aa),
-                              border: Border.all(
-                                  color: Color(0xfff3fc38), width: 3),
-                              borderRadius: BorderRadius.circular(25)),
-                          child: TextButton(
-                              onPressed: () async {
-                                await getQuestionList(index);
-                                Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          PlayQuiz(
-                                              listQuestion: listQuestion[index],
-                                              quiz: listQuiz[index]),
-                                    ));
-                              },
-                              child: Text(
-                                'Start',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headline6!
-                                    .copyWith(color: Colors.black87),
-                              ))),
-                    ],
-                  );
-                }));
+                                );
+                              });
+                    }));
   }
 }
