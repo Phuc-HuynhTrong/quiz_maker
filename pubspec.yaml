@@ -45,6 +45,7 @@ dev_dependencies:
   page_transition: ^2.0.2
   get_state_manager: ^3.13.0
   get: ^4.3.8
+  synchronized: ^3.0.0
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

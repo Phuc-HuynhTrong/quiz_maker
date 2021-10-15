@@ -8,11 +8,16 @@ import 'package:quiz_maker/services/database.dart';
 import 'package:quiz_maker/services/storage.dart';
 
 class quizInformation extends StatefulWidget {
+  bool isDeleted;
   final userId;
   final Quiz quiz;
   final List<Question> listQuestion;
   quizInformation(
-      {Key? key, required this.listQuestion, required this.quiz, this.userId})
+      {Key? key,
+      required this.listQuestion,
+      required this.quiz,
+      this.userId,
+      required this.isDeleted})
       : super(key: key);
 
   @override
@@ -69,6 +74,9 @@ class _quizInformation extends State<quizInformation> {
               onPressed: () {
                 databaseService.deleteQuiz(quiz, widget.userId, listQues);
                 storage.deleteImages(quiz.imageURL);
+                setState(() {
+                  widget.isDeleted = true;
+                });
                 Navigator.pop(context);
                 //return 'delete quiz';
               },

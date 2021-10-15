@@ -52,9 +52,10 @@ class DatabaseService {
     });
     //get list result of quiz in firebase
     List<Result> listResult = [];
-    await getListResultOfQuiz(quiz, uid).then(
-      (value) => listResult = value,
-    );
+    await getListResultOfQuiz(quiz, uid)
+        .then((value) => value.toList().forEach((element) {
+              listResult.add(element);
+            }));
     //delete collection 'results' of quiz in firebase
     listResult.forEach((element) {
       quizs.doc(quiz.id).collection('results').doc(element.id).delete();
@@ -91,7 +92,7 @@ class DatabaseService {
     return listQuiz;
   }
 
-  Stream<List<Quiz>> streamQuiz(listIdCodeQuiz)  {
+  Stream<List<Quiz>> streamQuiz(listIdCodeQuiz) {
     return quizs
         .where('code', whereIn: listIdCodeQuiz)
         .snapshots()
@@ -101,6 +102,7 @@ class DatabaseService {
       }).toList();
     });
   }
+
   //Question
   Future addQuestion(Question question, String idQuiz) async {
     DocumentReference quesRef = quizs.doc(idQuiz).collection('questions').doc();

@@ -53,45 +53,39 @@ class _CreateQuizHomeState extends State<CreateQuizHome> {
       print(e);
     }
   }
+
   addQuiz() async {
-    if(_formKey.currentState!.validate())
-      {
-        if(uploadImage == false)
-          {
-            await showAlertDialog(context,"Please upload image");
+    if (_formKey.currentState!.validate()) {
+      if (uploadImage == false) {
+        await showAlertDialog(context, "Please upload image");
+      } else if (listQuestion.length < 1) {
+        await showAlertDialog(context, "Please add question");
+      } else {
+        Quiz quiz =
+            Quiz(id: '', code: code, imageURL: imageFile.path, title: title);
+        var re = await databaseService.addQuiz(quiz);
+        if (re == "Code was uesd") {
+          await showAlertDialog(context, "Code was uesd");
+        } else {
+          storage.uploadImageToFirebase(File(imageFile.path));
+          final q = await databaseService.getQuizByCode(code);
+          for (int i = 0; i < listQuestion.length; i++) {
+            databaseService.addQuestion(listQuestion[i], q.id);
           }
-        else if(listQuestion.length < 1){
-          await showAlertDialog(context,"Please add question");
+          setState(() {
+            uploadImage = false;
+            listQuestion = <Question>[];
+            code = '';
+            title = '';
+            fieldText1.clear();
+            fieldText2.clear();
+          });
+          await showConfirm(context, "Successfully added quiz");
         }
-        else
-          {
-            Quiz quiz = Quiz(
-                id: '', code: code, imageURL: imageFile.path, title: title);
-            var re = await databaseService.addQuiz(quiz);
-            if(re == "Code was uesd")
-              {
-                await  showAlertDialog(context,"Code was uesd");
-              }
-            else{
-              storage.uploadImageToFirebase(File(imageFile.path));
-              final q = await databaseService.getQuizByCode(code);
-              for(int i = 0 ;i < listQuestion.length; i++)
-              {
-                databaseService.addQuestion(listQuestion[i], q.id);
-              }
-              setState(() {
-                uploadImage = false;
-                listQuestion = <Question>[];
-                code = '';
-                title = '';
-                fieldText1.clear();
-                fieldText2.clear();
-              });
-              await  showConfirm(context,"Successfully added quiz");
-            }
-          }
       }
+    }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -119,8 +113,8 @@ class _CreateQuizHomeState extends State<CreateQuizHome> {
                                       File(imageFile.path),
                                       fit: BoxFit.fill,
                                       height: 200,
-                                      width:
-                                          MediaQuery.of(context).size.width - 10,
+                                      width: MediaQuery.of(context).size.width -
+                                          10,
                                     ),
                                   )
                                 : Center(
@@ -143,21 +137,21 @@ class _CreateQuizHomeState extends State<CreateQuizHome> {
                         minLines: 1,
                         decoration: InputDecoration(
                           hintText: 'Enter title of quiz',
-                          hintStyle: TextStyle(
-                              fontSize: 20, color: Colors.grey[400]),
+                          hintStyle:
+                              TextStyle(fontSize: 20, color: Colors.grey[400]),
                           border: OutlineInputBorder(
                             borderSide:
-                            BorderSide(color: Colors.white, width: 2),
+                                BorderSide(color: Colors.white, width: 2),
                           ),
                           errorBorder: OutlineInputBorder(
                               borderSide:
-                              BorderSide(color: Colors.red, width: 2)),
+                                  BorderSide(color: Colors.red, width: 2)),
                           focusedBorder: OutlineInputBorder(
                               borderSide:
-                              BorderSide(color: Colors.white, width: 2)),
+                                  BorderSide(color: Colors.white, width: 2)),
                           enabledBorder: OutlineInputBorder(
                               borderSide:
-                              BorderSide(color: Colors.white, width: 2)),
+                                  BorderSide(color: Colors.white, width: 2)),
                         ),
                         onChanged: (val) {
                           title = val;
@@ -166,8 +160,8 @@ class _CreateQuizHomeState extends State<CreateQuizHome> {
                           fontSize: 20,
                           color: Colors.white,
                         ),
-                        validator: (val){
-                          if(title.length > 100) return "Title is so long";
+                        validator: (val) {
+                          if (title.length > 100) return "Title is so long";
                           return val!.isEmpty ? 'Enter title of quiz' : null;
                         },
                       ),
@@ -182,21 +176,21 @@ class _CreateQuizHomeState extends State<CreateQuizHome> {
                         maxLines: 1,
                         decoration: InputDecoration(
                           hintText: 'Enter code of quiz',
-                          hintStyle: TextStyle(
-                              fontSize: 20, color: Colors.grey[400]),
+                          hintStyle:
+                              TextStyle(fontSize: 20, color: Colors.grey[400]),
                           border: OutlineInputBorder(
                             borderSide:
-                            BorderSide(color: Colors.white, width: 2),
+                                BorderSide(color: Colors.white, width: 2),
                           ),
                           errorBorder: OutlineInputBorder(
                               borderSide:
-                              BorderSide(color: Colors.red, width: 2)),
+                                  BorderSide(color: Colors.red, width: 2)),
                           focusedBorder: OutlineInputBorder(
                               borderSide:
-                              BorderSide(color: Colors.white, width: 2)),
+                                  BorderSide(color: Colors.white, width: 2)),
                           enabledBorder: OutlineInputBorder(
                               borderSide:
-                              BorderSide(color: Colors.white, width: 2)),
+                                  BorderSide(color: Colors.white, width: 2)),
                         ),
                         onChanged: (val) {
                           code = val;
@@ -205,10 +199,12 @@ class _CreateQuizHomeState extends State<CreateQuizHome> {
                           fontSize: 20,
                           color: Colors.white,
                         ),
-                        validator: (val){
-                          if(code.length < 4) return "Code must longer than 3 digits";
-                          if(code.length > 8) return "Code must shorter than 9 digits";
-                          return val!.isEmpty?"Enter code" :null;
+                        validator: (val) {
+                          if (code.length < 4)
+                            return "Code must longer than 3 digits";
+                          if (code.length > 8)
+                            return "Code must shorter than 9 digits";
+                          return val!.isEmpty ? "Enter code" : null;
                         },
                       ),
                       SizedBox(
@@ -226,12 +222,22 @@ class _CreateQuizHomeState extends State<CreateQuizHome> {
                 return Container(
                   alignment: Alignment.center,
                   child: Column(
-                    mainAxisAlignment:  MainAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Row(
                         children: [
                           MaterialButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              Question ques = listQuestion[index];
+                              await Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => AddQuestionScreen(
+                                          ques: ques)));
+                              setState(() {
+                                listQuestion[index] = ques;
+                              });
+                            },
                             child: Container(
                                 margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
                                 padding: EdgeInsets.all(5),
@@ -243,7 +249,7 @@ class _CreateQuizHomeState extends State<CreateQuizHome> {
                                         color: Colors.white, width: 2)),
                                 child: Text(
                                   'Question ' +
-                                      (index + 1 ).toString() +
+                                      (index + 1).toString() +
                                       ' :' +
                                       listQuestion[index].question.toString(),
                                   style: TextStyle(
@@ -258,7 +264,10 @@ class _CreateQuizHomeState extends State<CreateQuizHome> {
                                   listQuestion.removeAt(index);
                                 });
                               },
-                              icon: Icon(Icons.clear, color: Colors.white,))
+                              icon: Icon(
+                                Icons.clear,
+                                color: Colors.white,
+                              ))
                         ],
                       ),
                     ],

@@ -12,12 +12,12 @@ class AddQuestionScreen extends StatefulWidget {
 
 class _AddQuestionScreenState extends State<AddQuestionScreen> {
   final _formKey = GlobalKey<FormState>();
-  late String ques;
-  late String op1;
-  late String op2;
-  late String op3;
-  late String op4;
-  late String answer;
+  late String ques = '';
+  late String op1 = '';
+  late String op2 = '';
+  late String op3= '';
+  late String op4 = '';
+  late String answer = '0';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,12 +46,12 @@ class _AddQuestionScreenState extends State<AddQuestionScreen> {
           IconButton(
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
-                  widget.ques.question = ques;
-                  widget.ques.option1 = op1;
-                  widget.ques.option2 = op2;
-                  widget.ques.option3 = op3;
-                  widget.ques.option4 = op4;
-                  widget.ques.rightAnswer = int.parse(answer);
+                  ques != '' ?widget.ques.question = ques:null;
+                  op1 != ''?widget.ques.option1 = op1:null;
+                  op2 != ''?widget.ques.option2 = op2:null;
+                  op3 != ''?widget.ques.option3 = op3:null;
+                  op4 != ''?widget.ques.option4 = op4:null;
+                  answer != '0'?widget.ques.rightAnswer = int.parse(answer):null;
                   Navigator.pop(context);
                 }
               },
@@ -75,6 +75,7 @@ class _AddQuestionScreenState extends State<AddQuestionScreen> {
                       color: Colors.transparent,
                       border: Border.all(color: Colors.white, width: 2)),
                   child: TextFormField(
+                    initialValue: widget.ques.question== ''?null:widget.ques.question,
                     cursorColor: Colors.white,
                     style: TextStyle(
                       fontSize: 20,
@@ -128,6 +129,7 @@ class _AddQuestionScreenState extends State<AddQuestionScreen> {
                             borderRadius: BorderRadius.circular(25),
                           ),
                           child: TextFormField(
+                            initialValue: widget.ques.option1== ''?null:widget.ques.option1,
                             cursorColor: Colors.white,
                             style: TextStyle(
                               fontSize: 16,
@@ -186,6 +188,7 @@ class _AddQuestionScreenState extends State<AddQuestionScreen> {
                             borderRadius: BorderRadius.circular(25),
                           ),
                           child: TextFormField(
+                            initialValue: widget.ques.option2== ''?null:widget.ques.option2,
                             cursorColor: Colors.white,
                             style: TextStyle(
                               fontSize: 16,
@@ -242,6 +245,7 @@ class _AddQuestionScreenState extends State<AddQuestionScreen> {
                             borderRadius: BorderRadius.circular(25),
                           ),
                           child: TextFormField(
+                            initialValue: widget.ques.option3== ''?null:widget.ques.option3,
                             cursorColor: Colors.white,
                             style: TextStyle(
                               fontSize: 16,
@@ -298,6 +302,7 @@ class _AddQuestionScreenState extends State<AddQuestionScreen> {
                             borderRadius: BorderRadius.circular(25),
                           ),
                           child: TextFormField(
+                            initialValue: widget.ques.option4== ''?null:widget.ques.option4,
                             cursorColor: Colors.white,
                             style: TextStyle(
                               fontSize: 16,
@@ -360,6 +365,7 @@ class _AddQuestionScreenState extends State<AddQuestionScreen> {
                       borderRadius: BorderRadius.circular(25),
                       border: Border.all(color: Colors.white, width: 1)),
                   child: TextFormField(
+                    initialValue: widget.ques.rightAnswer== 0?null:widget.ques.rightAnswer.toString(),
                     style: TextStyle(fontSize: 16, color: Colors.white),
                     validator: (val) {
                       // ignore: unrelated_type_equality_checks

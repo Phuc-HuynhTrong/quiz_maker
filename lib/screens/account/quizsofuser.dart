@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'package:quiz_maker/services/auth.dart';
 import 'package:quiz_maker/services/database.dart';
 import 'package:quiz_maker/services/storage.dart';
 import 'package:quiz_maker/widgets/appbar.dart';
+import 'package:synchronized/synchronized.dart';
 
 class QuizOfUser extends StatefulWidget {
   const QuizOfUser({Key? key}) : super(key: key);
@@ -22,23 +24,29 @@ class _QuizOfUserState extends State<QuizOfUser> {
   AuthService authService = AuthService();
   late DatabaseService databaseService;
   Storage storage = new Storage();
-  List<List<Question>> listQuestion = new List.filled(100, []);
-  List<Uint8List> listImage = new List.filled(100, Uint8List.fromList([0]));
-  bool isLoadCode = false;
+  bool isLoadCode = true;
   List<String> listCode = [];
+  int num = 0;
+  late List<List<Question>> listQuestion;
+  late List<Uint8List> listImage;
+
   @override
   void initState() {
+    var lock = Lock();
+    num = 0;
     super.initState();
     databaseService = DatabaseService(uid: authService.getCurrentUser!.uid);
-    getlistCode();
+    lock.synchronized(() => getlistCode());
   }
 
-  Future<void> getlistCode() async {
+  void getlistCode() async {
     isLoadCode = true;
     await databaseService
         .getListQuizOfUser()
         .then((value) => listQuiz = value)
         .whenComplete(() => {
+              listQuestion = new List.filled(100, []),
+              listImage = new List.filled(100, Uint8List.fromList([0])),
               if (listQuiz.length == 0)
                 {
                   setIsLoadingCode(),
@@ -54,11 +62,15 @@ class _QuizOfUserState extends State<QuizOfUser> {
             });
   }
 
-  void getData(List<Quiz> lq) {
-    for (int i = 0; i < lq.length; i++) {
-      getQuestionList(lq, i);
-      getImage(lq, i);
-    }
+  Future<void> getData(List<Quiz> lq) async {
+    var lock = Lock();
+    lock.synchronized(() => {
+          for (int i = 0; i < lq.length; i++)
+            {
+              getQuestionList(lq, i),
+              lock.synchronized(() => getImage(lq, i))
+            }
+        });
   }
 
   Future setIsLoadingCode() async {
@@ -72,7 +84,7 @@ class _QuizOfUserState extends State<QuizOfUser> {
       await storage
           .loadImages(lq[index].imageURL)
           .then((value) => listImage[index] = value)
-          .whenComplete(() => print('get image completed'));
+          .whenComplete(() => print('get image completed' + index.toString()));
     } catch (e) {
       print(e);
     }
@@ -125,10 +137,13 @@ class _QuizOfUserState extends State<QuizOfUser> {
                     stream: databaseService.streamQuiz(listCode),
                     builder: (context, snapshot) {
                       List<Quiz> list = snapshot.data ?? [];
-                      getData(list);
-                      print("list l: " + list.length.toString());
-                      return listImage[list.length == 0 ? 0: list.length - 1] ==
-                              Uint8List.fromList([0])
+                      var lock = Lock();
+                      lock
+                          .synchronized(() => {
+                                getData(list),
+                              });
+                     
+                      return lock.locked
                           ? Container(
                               child: Center(child: CircularProgressIndicator()),
                             )
@@ -138,18 +153,24 @@ class _QuizOfUserState extends State<QuizOfUser> {
                                 return Row(
                                   children: [
                                     MaterialButton(
-                                      onPressed: () {
-                                        Navigator.push(
+                                      onPressed: () async {
+                                        bool isDeleted = false;
+                                        await Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
                                                     quizInformation(
+                                                      isDeleted: isDeleted,
                                                       quiz: list[index],
                                                       listQuestion:
                                                           listQuestion[index],
                                                       userId: authService
                                                           .getCurrentUser!.uid,
                                                     )));
+                                        if (isDeleted == true) {
+                                          listImage.removeAt(index);
+                                          listQuestion.removeAt(index);
+                                        }
                                       },
                                       child: Container(
                                           margin:
