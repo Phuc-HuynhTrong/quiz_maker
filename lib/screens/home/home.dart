@@ -35,12 +35,6 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xff09103b),
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          title: appBar(context),
-          backgroundColor: Colors.transparent,
-          elevation: 0.0,
-        ),
         body: Container(
           child: index == 0
               ? PlayQuizScreen(uid: uid)

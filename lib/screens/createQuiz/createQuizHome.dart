@@ -7,6 +7,7 @@ import 'package:quiz_maker/screens/createQuiz/addquestions.dart';
 import 'package:quiz_maker/services/auth.dart';
 import 'package:quiz_maker/services/database.dart';
 import 'package:quiz_maker/services/storage.dart';
+import 'package:quiz_maker/widgets/appbar.dart';
 import 'package:quiz_maker/widgets/auth_error.dart';
 import 'package:quiz_maker/widgets/notice_confirm.dart';
 
@@ -90,6 +91,51 @@ class _CreateQuizHomeState extends State<CreateQuizHome> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xff09103b),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        centerTitle: true,
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+
+          children: [
+            appBar(context),
+          ],
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0.0,
+        actions: [
+          TextButton(
+            onPressed: () async {
+              Question ques = Question(
+                  id: '',
+                  imageURL: '',
+                  option1: '',
+                  option2: '',
+                  option3: '',
+                  option4: '',
+                  question: '',
+                  rightAnswer: 0);
+              await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => AddQuestionScreen(
+                            ques: ques,
+                          )));
+              print('ques : ' + ques.question);
+              if (ques.question != '') {
+                setState(() {
+                  listQuestion.add(ques);
+                });
+              }
+            },
+            child: Center(
+                child: Text(
+              'Add question',
+              style: TextStyle(fontSize: 14, color: Colors.white),
+            )),
+          )
+        ],
+      ),
       body: Form(
         key: _formKey,
         child: CustomScrollView(
@@ -131,81 +177,87 @@ class _CreateQuizHomeState extends State<CreateQuizHome> {
                       SizedBox(
                         height: 10,
                       ),
-                      TextFormField(
-                        controller: fieldText1,
-                        cursorColor: Colors.white,
-                        minLines: 1,
-                        decoration: InputDecoration(
-                          hintText: 'Enter title of quiz',
-                          hintStyle:
-                              TextStyle(fontSize: 20, color: Colors.grey[400]),
-                          border: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.white, width: 2),
+                      Container(
+                        margin: EdgeInsets.symmetric(horizontal: 10),
+                        child: TextFormField(
+                          controller: fieldText1,
+                          cursorColor: Colors.white,
+                          minLines: 1,
+                          decoration: InputDecoration(
+                            hintText: 'Enter title of quiz',
+                            hintStyle: TextStyle(
+                                fontSize: 20, color: Colors.grey[400]),
+                            border: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.white, width: 2),
+                            ),
+                            errorBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Colors.red, width: 2)),
+                            focusedBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Colors.white, width: 2)),
+                            enabledBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Colors.white, width: 2)),
                           ),
-                          errorBorder: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.red, width: 2)),
-                          focusedBorder: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.white, width: 2)),
-                          enabledBorder: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.white, width: 2)),
+                          onChanged: (val) {
+                            title = val;
+                          },
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.white,
+                          ),
+                          validator: (val) {
+                            if (title.length > 100) return "Title is so long";
+                            return val!.isEmpty ? 'Enter title of quiz' : null;
+                          },
                         ),
-                        onChanged: (val) {
-                          title = val;
-                        },
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.white,
-                        ),
-                        validator: (val) {
-                          if (title.length > 100) return "Title is so long";
-                          return val!.isEmpty ? 'Enter title of quiz' : null;
-                        },
                       ),
                       SizedBox(
                         height: 10,
                       ),
-                      TextFormField(
-                        autofocus: false,
-                        controller: fieldText2,
-                        cursorColor: Colors.white,
-                        minLines: 1,
-                        maxLines: 1,
-                        decoration: InputDecoration(
-                          hintText: 'Enter code of quiz',
-                          hintStyle:
-                              TextStyle(fontSize: 20, color: Colors.grey[400]),
-                          border: OutlineInputBorder(
-                            borderSide:
-                                BorderSide(color: Colors.white, width: 2),
+                      Container(
+                        margin: EdgeInsets.symmetric(horizontal: 10),
+                        child: TextFormField(
+                          autofocus: false,
+                          controller: fieldText2,
+                          cursorColor: Colors.white,
+                          minLines: 1,
+                          maxLines: 1,
+                          decoration: InputDecoration(
+                            hintText: 'Enter code of quiz',
+                            hintStyle: TextStyle(
+                                fontSize: 20, color: Colors.grey[400]),
+                            border: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.white, width: 2),
+                            ),
+                            errorBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Colors.red, width: 2)),
+                            focusedBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Colors.white, width: 2)),
+                            enabledBorder: OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Colors.white, width: 2)),
                           ),
-                          errorBorder: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.red, width: 2)),
-                          focusedBorder: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.white, width: 2)),
-                          enabledBorder: OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.white, width: 2)),
+                          onChanged: (val) {
+                            code = val;
+                          },
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.white,
+                          ),
+                          validator: (val) {
+                            if (code.length < 4)
+                              return "Code must longer than 3 digits";
+                            if (code.length > 8)
+                              return "Code must shorter than 9 digits";
+                            return val!.isEmpty ? "Enter code" : null;
+                          },
                         ),
-                        onChanged: (val) {
-                          code = val;
-                        },
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.white,
-                        ),
-                        validator: (val) {
-                          if (code.length < 4)
-                            return "Code must longer than 3 digits";
-                          if (code.length > 8)
-                            return "Code must shorter than 9 digits";
-                          return val!.isEmpty ? "Enter code" : null;
-                        },
                       ),
                       SizedBox(
                         height: 30,
@@ -232,8 +284,8 @@ class _CreateQuizHomeState extends State<CreateQuizHome> {
                               await Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => AddQuestionScreen(
-                                          ques: ques)));
+                                      builder: (context) =>
+                                          AddQuestionScreen(ques: ques)));
                               setState(() {
                                 listQuestion[index] = ques;
                               });
@@ -278,38 +330,6 @@ class _CreateQuizHomeState extends State<CreateQuizHome> {
             )),
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        elevation: 1,
-        backgroundColor: Colors.grey,
-        onPressed: () async {
-          Question ques = Question(
-              id: '',
-              imageURL: '',
-              option1: '',
-              option2: '',
-              option3: '',
-              option4: '',
-              question: '',
-              rightAnswer: 0);
-          await Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (BuildContext context) => AddQuestionScreen(
-                        ques: ques,
-                      )));
-          print('ques : ' + ques.question);
-          if (ques.question != '') {
-            setState(() {
-              listQuestion.add(ques);
-            });
-          }
-        },
-        child: Center(
-            child: Text(
-          'Add\nques',
-          style: TextStyle(fontSize: 16, color: Colors.white),
-        )),
       ),
       bottomNavigationBar: Container(
         margin: EdgeInsets.all(20),
