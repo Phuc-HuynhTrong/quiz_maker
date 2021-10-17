@@ -9,7 +9,7 @@ import 'package:quiz_maker/services/auth.dart';
 import 'package:quiz_maker/services/database.dart';
 import 'package:quiz_maker/services/storage.dart';
 import 'package:quiz_maker/widgets/appbar.dart';
-import 'package:synchronized/synchronized.dart';
+
 
 class QuizOfUser extends StatefulWidget {
   const QuizOfUser({Key? key}) : super(key: key);

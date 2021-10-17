@@ -1,4 +1,8 @@
+import 'dart:io';
+
+import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:quiz_maker/services/storage.dart';
 
 class AuthService {
   FirebaseAuth _auth = FirebaseAuth.instance;
@@ -66,6 +70,22 @@ class AuthService {
       return "Sent email";
     } on FirebaseAuthException catch (e) {
       return e.code;
+    }
+  }
+  Future changeName(String displayName) async {
+    try{
+      await _auth.currentUser!.updateDisplayName(displayName);
+    }
+    catch(e){
+    }
+  }
+  Future changeAvatar(File image) async {
+    Storage storage = Storage();
+    await storage.uploadImageToFirebase(image);
+    try{
+      await _auth.currentUser!.updatePhotoURL('images/${image.path}');
+    }
+    catch(e){
     }
   }
 }

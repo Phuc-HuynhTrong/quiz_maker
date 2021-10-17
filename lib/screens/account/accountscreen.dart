@@ -16,6 +16,7 @@ class AccountScreen extends StatefulWidget {
 
 class _AccountScreenState extends State<AccountScreen> {
   AuthService _authService = AuthService();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,6 +50,10 @@ class _AccountScreenState extends State<AccountScreen> {
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: Colors.blue,
+                          ),
+                          child: Center(
+                            child: Text(
+                              user.displayName.toString().substring(0, 1), style: TextStyle(color: Colors.white, fontSize: 50),),
                           ),
                         ),
                       ),
@@ -89,12 +94,15 @@ class _AccountScreenState extends State<AccountScreen> {
                           height: 50,
                           width: double.infinity,
                           child: TextButton(
-                              onPressed: () {
-                                Navigator.push(
+                              onPressed: () async {
+                                await Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) =>
                                             InformationScreen()));
+                                setState(() {
+
+                                });
                               },
                               child: Text(
                                 'Your imformation',
